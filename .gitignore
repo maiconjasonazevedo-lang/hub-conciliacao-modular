@@ -1,0 +1,24 @@
+# Dependências locais
+node_modules/
+
+# Arquivos de ambiente locais
+.env
+.env.*
+
+# Logs
+*.log
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# Arquivos temporários de execução local
+*.tmp
+*.bak
+
+# Saídas de build se vierem a existir
+/dist/
+/build/

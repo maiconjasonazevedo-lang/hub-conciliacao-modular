@@ -1,0 +1,9 @@
+.user-management-card { max-width: 520px; }
+.user-list-panel { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+.user-list { display: grid; gap: 10px; }
+.user-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border2); }
+.user-list-item strong { font-family: var(--fh); font-size: 13px; }
+.user-role-label { font-size: 11px; color: var(--text-dim); padding: 2px 8px; border-radius: 999px; background: rgba(0,0,0,.04); text-transform: uppercase; letter-spacing: .6px; }
+.user-remove-btn { border: none; background: transparent; color: var(--red); cursor: pointer; font-size: 12px; font-family: var(--fm); }
+.user-remove-btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.user-management-actions { display: flex; justify-content: flex-end; margin-top: 18px; }

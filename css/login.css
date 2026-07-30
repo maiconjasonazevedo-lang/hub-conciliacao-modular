@@ -1,0 +1,37 @@
+.login-screen{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  padding:40px 20px;
+  background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg);
+}
+
+.login-card{
+  width:100%;
+  max-width:420px;
+  background:var(--surface);
+  border:1.5px solid var(--border2);
+  border-radius:20px;
+  padding:36px 28px;
+  box-shadow:0 18px 60px rgba(0,0,0,.2);
+}
+
+.login-brand{margin-bottom:28px}
+.login-title{font-family:var(--fh);font-size:26px;font-weight:800;color:var(--orange);letter-spacing:-1px;margin-bottom:4px}
+.login-title span{color:var(--text-dim);font-weight:600}
+.login-subtitle{font-family:var(--fm);font-size:12px;color:var(--text-dim);line-height:1.6}
+
+.login-form{display:flex;flex-direction:column;gap:16px}
+.login-label{font-family:var(--fm);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px}
+.login-form input.fi{width:100%;box-sizing:border-box}
+.login-form button.pbtn2{width:100%;padding:14px 0}
+.login-info{font-family:var(--fm);font-size:11px;color:var(--text-muted);margin-top:10px}
+.login-error{font-family:var(--fm);font-size:12px;color:var(--red);min-height:18px;margin-top:-8px}
+.user-management-card { max-width: 520px; }
+.user-list-panel { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+.user-list { display: grid; gap: 10px; }
+.user-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border2); }
+.user-list-item strong { font-family: var(--fh); font-size: 13px; }
+.user-remove-btn { border: none; background: transparent; color: var(--red); cursor: pointer; font-size: 12px; font-family: var(--fm); }
+.user-management-actions { display: flex; justify-content: flex-end; margin-top: 18px; }

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conciliação Shopee × Anymarket</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/variables.css">
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+<link rel="stylesheet" href="css/tables.css">
+<link rel="stylesheet" href="css/login.css">
+<link rel="stylesheet" href="css/user-management.css">
+</head>
+
+<body>
+
+<!-- ══════ HUB MARKETPLACE ══════ -->
+<div id="hub-screen">
+  <div class="hub-logo">Conciliação <span>Marketplace</span></div>
+  <div class="hub-tag">Selecione o marketplace para iniciar a conciliação</div>
+  <div class="hub-grid">
+    <div class="hub-card active" onclick="selectMarketplace('amazon')">
+      <span class="hub-card-icon">📦</span>
+      <div class="hub-card-name">Amazon</div>
+      <div class="hub-card-status">Disponível</div>
+    </div>
+    <div class="hub-card" onclick="selectMarketplace('magalu')">
+      <span class="hub-card-icon">🛒</span>
+      <div class="hub-card-name">Magazine Luiza</div>
+      <div class="hub-card-status">Em breve</div>
+    </div>
+    <div class="hub-card active" onclick="selectMarketplace('meli')">
+      <span class="hub-card-icon">🟡</span>
+      <div class="hub-card-name">Mercado Livre</div>
+      <div class="hub-card-status">Disponível</div>
+    </div>
+    <div class="hub-card active" onclick="selectMarketplace('shopee')">
+      <span class="hub-card-icon">🛍️</span>
+      <div class="hub-card-name">Shopee</div>
+      <div class="hub-card-status">Disponível</div>
+    </div>
+  </div>
+  <div class="hub-user-panel" id="hub-user-panel" style="display:none;margin-top:18px;gap:12px;align-items:center;">
+    <div>Conectado como <strong id="hub-user-name"></strong> (<span id="hub-user-role"></span>)</div>
+    <button id="logout-button" class="pbtn2" style="padding:8px 14px;">Logout</button>
+  </div>
+  <div class="hub-dev-msg" id="hub-dev-msg">⚙️ Em desenvolvimento</div>
+  <button id="open-user-management-hub" class="pbtn2" style="display:none;margin-top:18px;padding:12px 18px;">Gerenciar usuários</button>
+</div>
+
+<!-- ══════ SHOPEE HOME ══════ -->
+<div id="shopee-home">
+  <div class="hub-logo">Shopee <span>Apps</span></div>
+  <div class="hub-tag">
+    Selecione o app Shopee &nbsp;·&nbsp;
+    <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToHub()">← Voltar ao Hub</span>
+  </div>
+  <div class="hub-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,220px))">
+    <div class="hub-card active" onclick="openShopeeConciSaque()">
+      <span class="hub-card-icon">💰</span>
+      <div class="hub-card-name">Conciliação de Saque</div>
+      <div class="hub-card-status">Disponível</div>
+    </div>
+
+    <div class="hub-card active" onclick="openShopeeConciNF()">
+      <span class="hub-card-icon">🧾</span>
+      <div class="hub-card-name">Conciliação NF</div>
+      <div class="hub-card-status">Disponível</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SHOPEE ENTRY SCREEN ══════ -->
+<div id="shopee-entry-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg)">
+  <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:var(--orange);margin-bottom:4px;letter-spacing:-1px">Conciliação Shopee <span style="color:var(--text-dim);font-weight:600">× Anymarket</span></div>
+  <div style="color:var(--text-dim);font-size:12px;margin-bottom:40px;font-family:var(--fm)">Como deseja iniciar? &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToShopeeHome()">← Shopee Apps</span></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;width:100%;max-width:680px">
+    <label style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'">
+      <span style="font-size:32px">📂</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Abrir Histórico</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">.json salvo anteriormente</div>
+      <input type="file" accept=".json" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="entryLoadShopee(event)">
+    </label>
+    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryNewUploadShopee()">
+      <span style="font-size:32px">📤</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Novo Upload</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Processar novos relatórios</div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryEmptyShopee()">
+      <span style="font-size:32px">👀</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Entrar sem dados</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Ver tela vazia / explorar</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SHOPEE CONCI NF APP ══════ -->
+<div id="shopee-nf-app" style="display:none">
+
+  <!-- Upload NF screen -->
+  <div id="snf-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg)">
+    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:var(--orange);margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">NF Shopee</span></div>
+    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Cruze os itens da NF de comissão/taxas com o relatório de pedidos &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToShopeeHome()">← Shopee Apps</span></div>
+
+    <div class="ugrid" style="max-width:860px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+
+      <!-- Orders -->
+      <label class="uc" id="snf-uc-orders">
+        <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
+        <span class="uc-icon">🛍️</span>
+        <div class="uc-title">Pedidos Shopee (Orders)</div>
+        <div class="uc-desc">Shopee → Meus Pedidos → Exportar Todos<br><br><em>Contém: comissão, taxa de serviço, taxa de transação por pedido</em></div>
+        <div class="uc-file" id="snf-fn-orders">Nenhum arquivo</div>
+        <input type="file" accept=".xlsx,.xls" onchange="snfLoadOrders(event)">
+      </label>
+
+      <!-- Valores da NF -->
+      <div class="uc" style="cursor:default;pointer-events:none;border-style:solid;border-color:var(--border2)">
+        <span class="uc-icon">🧾</span>
+        <div class="uc-title">Valores da Nota Fiscal</div>
+        <div class="uc-desc" style="pointer-events:all">
+          <div style="margin-bottom:10px;color:var(--text-dim);font-size:10px">Preencha os valores da NF recebida da Shopee</div>
+
+          <!-- Grupo Comissão -->
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--orange);margin-bottom:5px;font-family:var(--fm)">Comissão</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Serv. de comissão</span>
+              <input id="snf-nf-comissao" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Taxa por item vendido</span>
+              <input id="snf-nf-taxa-item" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. comissão</span>
+              <input id="snf-nf-abat-comissao" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+          </div>
+
+          <!-- Grupo Opcionais -->
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:5px;font-family:var(--fm)">Opcionais / Personalizados</div>
+          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. opcionais</span>
+              <input id="snf-nf-abat-opcionais" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+          </div>
+
+          <!-- Grupo Processamento -->
+          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:5px;font-family:var(--fm)">Processamento de Pagamentos</div>
+          <div style="display:flex;flex-direction:column;gap:5px">
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Serv. de processamento</span>
+              <input id="snf-nf-processamento" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
+              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. processamento</span>
+              <input id="snf-nf-abat-proc" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="uinfo" style="max-width:860px;margin-top:16px">
+      <strong>💡 Comissão:</strong> <em>Taxa de comissão líquida</em> + <em>Taxa de serviço líquida</em> do relatório Orders.<br>
+      <strong>💳 Processamento:</strong> <em>Taxa de transação</em> do relatório Orders.<br>
+      <strong>↩ Devoluções:</strong> Pedidos com <em>Status da Devolução / Reembolso</em> preenchido são isolados como abatimentos.<br>
+      <strong>⚠️ Cancelados</strong> são excluídos automaticamente (sem cobrança).
+    </div>
+
+    <button class="pbtn2" id="snf-proc-btn" onclick="snfProcess()" disabled>⚡ Processar Conciliação NF</button>
+    <div class="pst" id="snf-proc-st"></div>
+  </div>
+
+  <!-- Result screen NF -->
+  <div id="snf-result-screen" style="display:none">
+    <div class="hdr">
+      <div class="logo">Conciliação <span>NF Shopee</span></div>
+      <div class="period" id="snf-period">—</div>
+      <button class="dl-btn" onclick="snfExportExcel()">⬇ Exportar Excel</button>
+      <button class="bk-btn" style="margin-left:auto" onclick="snfNovoUpload()">↩ Novo Upload</button>
+      <button class="bk-btn" style="margin-left:6px" onclick="goToShopeeHome()">⌂ Shopee Apps</button>
+    </div>
+
+    <div class="main">
+      <!-- Cards resumo -->
+      <div class="cards" id="snf-cards"></div>
+
+      <!-- Painel comparativo NF x Orders -->
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📊 Comparativo: NF × Relatório Orders</div>
+      <div class="tw" style="margin-bottom:18px">
+        <div class="ts">
+          <table id="snf-compare-table" style="width:100%">
+            <thead>
+              <tr>
+                <th>Grupo / Item</th>
+                <th style="text-align:right">Valor NF (R$)</th>
+                <th style="text-align:right">Valor Orders (R$)</th>
+                <th style="text-align:right">Diferença (R$)</th>
+                <th style="text-align:center">Status</th>
+              </tr>
+            </thead>
+            <tbody id="snf-compare-body"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Tabela de pedidos detalhada -->
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📋 Pedidos do Período</div>
+      <div class="flt">
+        <input class="fi" style="min-width:220px" id="snf-q" placeholder="🔍 Buscar pedido, produto..." oninput="snfBuildTable()">
+        <select class="fi" id="snf-f-status" onchange="snfBuildTable()">
+          <option value="">Todos os status</option>
+          <option value="faturado">Faturados</option>
+          <option value="devolvido">Com devolução</option>
+          <option value="cancelado">Cancelados</option>
+        </select>
+        <span class="cnt" id="snf-cnt">0 pedidos</span>
+      </div>
+      <div class="tw">
+        <div class="ts"><table id="snf-table"><thead></thead><tbody></tbody></table></div>
+        <div class="pag" id="snf-pag"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /#shopee-nf-app -->
+
+<!-- ══════ MELI ENTRY SCREEN ══════ -->
+<div id="meli-entry-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(241,196,15,.05) 0%,transparent 60%),var(--bg)">
+  <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#f1c40f;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Mercado Livre</span></div>
+  <div style="color:var(--text-dim);font-size:12px;margin-bottom:40px;font-family:var(--fm)">Como deseja iniciar? &nbsp;·&nbsp; <span style="cursor:pointer;color:#f1c40f;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;width:100%;max-width:680px">
+    <label style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'">
+      <span style="font-size:32px">📂</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Abrir Histórico</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">.json salvo anteriormente</div>
+      <input type="file" accept=".json" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="entryLoadML(event)">
+    </label>
+    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryNewUploadML()">
+      <span style="font-size:32px">📤</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Novo Upload</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Processar novos relatórios</div>
+    </div>
+    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryEmptyML()">
+      <span style="font-size:32px">👀</span>
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Entrar sem dados</div>
+      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Ver tela vazia / explorar</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ SHOPEE APP (todo o sistema existente) ══════ -->
+<div id="shopee-app" style="display:none">
+<div id="upload-screen">
+  <div class="ul">Conciliação Shopee <span>× Anymarket</span></div>
+  <div class="utag">Faça upload dos relatórios para processar sua conciliação &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+
+  <div class="ugrid">
+
+    <label class="uc" id="uc-income">
+      <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
+      <span class="uc-icon">📥</span>
+      <div class="uc-title">Income / Renda Lançada</div>
+      <div class="uc-desc">Shopee → Minha Carteira → Renda → Exportar<br><br><em>Pedidos antigos sendo liberados + Service Fee Details</em></div>
+      <div class="uc-file" id="fn-income">Nenhum arquivo</div>
+      <input type="file" accept=".xlsx,.xls" onchange="loadFile(event,'income')">
+    </label>
+
+    <label class="uc" id="uc-trans">
+      <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
+      <span class="uc-icon">💸</span>
+      <div class="uc-title">Extrato de Transações</div>
+      <div class="uc-desc">Shopee → Minha Carteira → Histórico de Transações → Exportar<br><br><em>Saques, entradas, ajustes do período</em></div>
+      <div class="uc-file" id="fn-trans">Nenhum arquivo</div>
+      <input type="file" accept=".xlsx,.xls" onchange="loadFile(event,'trans')">
+    </label>
+
+    <label class="uc" id="uc-any">
+      <span class="uc-badge">✓</span>
+      <span class="uc-multi">Múltiplos</span>
+      <span class="uc-icon">🔗</span>
+      <div class="uc-title">Anymarket — Exportação</div>
+      <div class="uc-desc">Anymarket → Pedidos → Exportar → Dados<br><br><em>⚠️ Exporte o período do Income + o período atual para ter NFs completas</em></div>
+      <div class="uc-file" id="fn-any">Nenhum arquivo</div>
+      <div class="uc-count" id="cnt-any"></div>
+      <input type="file" accept=".xlsx,.xls" multiple onchange="loadFileMulti(event,'any')">
+    </label>
+
+    <label class="uc" id="uc-orders">
+      <span class="uc-badge">✓</span>
+      <span class="uc-icon">🛍️</span>
+      <div class="uc-title">Pedidos Shopee (Orders)</div>
+      <div class="uc-desc">Shopee → Meus Pedidos → Exportar Todos<br><br><em>Taxas dos pedidos do período atual</em></div>
+      <div class="uc-file" id="fn-orders">Nenhum arquivo</div>
+      <input type="file" accept=".xlsx,.xls" onchange="loadFile(event,'orders')">
+    </label>
+
+  </div>
+
+  <div class="uinfo">
+    <strong>💡 Obrigatórios:</strong> Income e Extrato de Transações.<br>
+    <strong>📋 Para NFs completas:</strong> No Anymarket, exporte <em>dois</em> arquivos — um com o período do Income (pedidos antigos) e outro com o período atual — e faça upload dos dois ao mesmo tempo no campo Anymarket (aceita múltiplos arquivos).<br>
+    <strong>🛍️ Orders:</strong> opcional, enriquece custos dos pedidos novos.
+  </div>
+
+  <button class="pbtn2" id="proc-btn" onclick="processFiles()" disabled>⚡ Processar Conciliação</button>
+  <div class="pst" id="proc-st"></div>
+</div>
+
+<!-- ══════ APP ══════ -->
+<div id="app-screen">
+  <div class="hdr">
+    <div class="logo">Conciliação Shopee <span>× Anymarket</span></div>
+    <div class="period" id="hdr-period">—</div>
+    <button class="dl-btn" onclick="downloadCSV()">⬇ Exportar Relatorio DCC</button>
+    <label class="dl-btn" style="background:var(--blue);cursor:pointer;margin-left:6px" title="Carregar relatório DCC para gerar Baixa">📂 Carregar DCC<input type="file" accept=".ods,.csv,.xlsx" style="display:none" onchange="loadBaixaDCC(event)"></label>
+    <button class="dl-btn" id="btn-baixa-dcc" onclick="downloadBaixaDCC()" disabled style="opacity:.4;background:var(--purple);margin-left:6px">⬇ Baixa DCC</button>
+    <label class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;margin-left:6px" title="Carregar histórico JSON Shopee">📂 Histórico<input type="file" accept=".json" style="display:none" onchange="loadHistShopee(event)"></label>
+    <button class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);margin-left:4px" onclick="saveHistShopee()" title="Salvar histórico JSON Shopee">💾 Salvar Hist.</button>
+    <button class="bk-btn" onclick="goToHub()" style="margin-left:auto">⌂ Hub</button>
+    <button class="bk-btn" onclick="entryNewUploadShopee()" style="margin-left:6px">↩ Novo Upload</button>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('dash')">Dashboard</div>
+    <div class="tab" onclick="showTab('trans')">Transações</div>
+    <div class="tab" onclick="showTab('lib')">Liberações</div>
+    <div class="tab" onclick="showTab('saques')">Saques</div>
+    <div class="tab" onclick="showTab('nfs')">Notas Fiscais</div>
+  </div>
+  <div class="main">
+    <div id="tab-dash">
+      <div class="cards" id="dash-cards"></div>
+      <div class="sh">💳 Saques Identificados</div>
+      <div class="sgrid" id="dash-saques"></div>
+      <div class="sh">📋 Últimas Transações</div>
+      <div class="tw"><div class="ts"><table id="t-rec"><thead></thead><tbody></tbody></table></div></div>
+    </div>
+    <div id="tab-trans" class="hidden">
+      <div class="flt">
+        <input class="fi" style="min-width:220px" id="ft-q" placeholder="🔍 Buscar pedido, tipo...">
+        <select class="fi" id="ft-tp"><option value="">Todos os Tipos</option></select>
+        <select class="fi" id="ft-sq"><option value="">Todos os Saques</option></select>
+        <span class="cnt" id="cnt-tr">0 linhas</span>
+      </div>
+      <div class="tw"><div class="ts"><table id="t-tr"><thead></thead><tbody></tbody></table></div><div class="pag" id="pag-tr"></div></div>
+    </div>
+    <div id="tab-lib" class="hidden">
+      <div class="flt">
+        <input class="fi" style="min-width:220px" id="fl-q" placeholder="🔍 Buscar pedido, produto...">
+        <select class="fi" id="fl-sq"><option value="">Todos os Saques</option></select>
+        <span class="cnt" id="cnt-lb">0 pedidos</span>
+      </div>
+      <div class="tw"><div class="ts"><table id="t-lb"><thead></thead><tbody></tbody></table></div><div class="pag" id="pag-lb"></div></div>
+    </div>
+    <div id="tab-saques" class="hidden"><div id="saq-det"></div></div>
+    <div id="tab-nfs" class="hidden">
+      <div class="flt">
+        <input class="fi" style="min-width:220px" id="fn-q" placeholder="🔍 Buscar NF, pedido, produto...">
+        <select class="fi" id="fn-st2"><option value="">Todos</option><option value="com">Com NF</option><option value="sem">Sem NF</option></select>
+        <span class="cnt" id="cnt-nf2">0 pedidos</span>
+      </div>
+      <div class="tw"><div class="ts"><table id="t-nf2"><thead></thead><tbody></tbody></table></div><div class="pag" id="pag-nf2"></div></div>
+    </div>
+  </div>
+</div>
+
+<div class="ov" id="ov" onclick="closeDrw()"></div>
+<div class="drw" id="drw"><button class="drw-x" onclick="closeDrw()">✕</button><div id="drw-c"></div></div>
+
+</div><!-- /#shopee-app -->
+
+<!-- ══════ MERCADO LIVRE APP ══════ -->
+<div id="meli-app" style="display:none">
+  <!-- Upload screen ML -->
+  <div id="meli-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,193,7,.05) 0%,transparent 60%),var(--bg)">
+    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#f1c40f;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Mercado Livre</span></div>
+    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Faça upload dos dois relatórios para processar a conciliação &nbsp;·&nbsp; <span style="cursor:pointer;color:#f1c40f;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+    <div class="ugrid" style="max-width:640px">
+      <label class="uc" id="uc-ml-sca" style="border-color:#f1c40f33">
+        <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
+        <span class="uc-icon">📊</span>
+        <div class="uc-title">Relatório SCA</div>
+        <div class="uc-desc">JVCR6011 — Relatório de Fechamento de Comissões ML<br><br><em>Contém: Pedido ML, Comissão ML, Comissão SCA</em></div>
+        <div class="uc-file" id="fn-ml-sca">Nenhum arquivo</div>
+        <input type="file" accept=".xlsx,.xls,.ods" onchange="loadMeliFile(event,'sca')">
+      </label>
+      <label class="uc" id="uc-ml-ec" style="border-color:#f1c40f33">
+        <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
+        <span class="uc-icon">🛒</span>
+        <div class="uc-title">Relatório E-commerce</div>
+        <div class="uc-desc">JVCR4010 — Comissão de Vendas E-commerce Marketplace<br><br><em>Contém: Pedido Marketplace, Despesa Base, Frete Any</em></div>
+        <div class="uc-file" id="fn-ml-ec">Nenhum arquivo</div>
+        <input type="file" accept=".xlsx,.xls,.ods" onchange="loadMeliFile(event,'ec')">
+      </label>
+    </div>
+    <div class="uinfo" style="max-width:640px">
+      <strong>💡 Como funciona:</strong> O sistema cruza os pedidos pelo <strong>Pedido ML = Pedido Marketplace</strong> e separa a <strong>Comissão ML</strong> em <strong>ComissaoReal</strong> (Despesa Base + Despesa Desconto ML) e <strong>FreteML</strong> (Frete Marketplace recebido da Any).
+    </div>
+    <button class="pbtn2" id="meli-proc-btn" onclick="processMeli()" disabled style="background:#f1c40f;color:#000;box-shadow:0 4px 20px rgba(241,196,15,.3)">⚡ Processar Conciliação ML</button>
+    <div class="pst" id="meli-proc-st"></div>
+  </div>
+
+  <!-- Result screen ML -->
+  <div id="meli-result-screen" style="display:none">
+    <div class="hdr">
+      <div class="logo" style="color:#f1c40f">Conciliação <span style="color:var(--text-dim)">Mercado Livre</span></div>
+      <div class="period" id="meli-period">—</div>
+      <button class="dl-btn" onclick="downloadMeliODS()" style="background:#f1c40f;color:#000">⬇ Exportar ODS</button>
+      <label class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;margin-left:6px" title="Carregar histórico JSON ML">📂 Histórico<input type="file" accept=".json" style="display:none" onchange="loadHistML(event)"></label>
+      <button class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);margin-left:4px" onclick="saveHistML()" title="Salvar histórico JSON ML">💾 Salvar Hist.</button>
+      <button class="bk-btn" onclick="entryNewUploadML()" style="margin-left:6px">↩ Novo Upload</button>
+      <button class="bk-btn" onclick="goToHub()" style="margin-left:6px">⌂ Hub</button>
+    </div>
+    <!-- Cards resumo -->
+    <div class="main">
+      <div class="cards" id="meli-cards"></div>
+      <!-- Tabela -->
+      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📋 Pedidos Conciliados</div>
+      <div class="flt">
+        <input class="fi" style="min-width:220px" id="meli-q" placeholder="🔍 Buscar pedido, nota..." oninput="buildMeliTable()">
+        <select class="fi" id="meli-sit" onchange="buildMeliTable()">
+          <option value="">Todas Situações</option>
+        </select>
+        <select class="fi" id="meli-match" onchange="buildMeliTable()">
+          <option value="">Com e Sem match EC</option>
+          <option value="com">Com match EC</option>
+          <option value="sem">Sem match EC</option>
+        </select>
+        <span class="cnt" id="meli-cnt">0 pedidos</span>
+      </div>
+      <div class="tw"><div class="ts"><table id="meli-table"><thead></thead><tbody></tbody></table></div><div class="pag" id="meli-pag"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════ AMAZON APP ══════ -->
+<div id="amazon-app" style="display:none">
+
+  <!-- Upload screen Amazon -->
+  <div id="amz-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,153,0,.07) 0%,transparent 60%),var(--bg)">
+    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#ff9900;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Amazon</span></div>
+    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Faça upload do(s) Settlement Report(s) &nbsp;·&nbsp; <span style="cursor:pointer;color:#ff9900;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+
+    <!-- Separador visual -->
+    <div style="width:100%;max-width:860px;display:flex;align-items:center;gap:12px;margin-bottom:4px">
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+      <div style="font-family:var(--fm);font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase">Fontes de dados</div>
+      <div style="flex:1;height:1px;background:var(--border)"></div>
+    </div>
+
+    <div class="ugrid" style="max-width:860px">
+
+      <!-- Settlement -->
+      <label class="uc" id="uc-amz-settlement" style="border-color:#ff990033">
+        <span class="uc-badge">✓</span>
+        <span class="uc-multi">Múltiplos</span>
+        <span class="uc-icon">📄</span>
+        <div class="uc-title">Settlement Report(s)</div>
+        <div class="uc-desc">Seller Central → Relatórios → Pagamentos → Settlement Report<br><br><em>Arquivo .txt — aceita vários de uma vez</em></div>
+        <div class="uc-file" id="fn-amz-settlement">Nenhum arquivo</div>
+        <div class="uc-count" id="cnt-amz-settlement"></div>
+        <input type="file" accept=".txt,.tsv" multiple onchange="loadAmzFiles(event)">
+      </label>
+
+      <!-- ERP -->
+      <label class="uc" id="uc-amz-erp" style="border-color:#3d9eff33">
+        <span class="uc-badge">✓</span>
+        <span class="uc-icon" style="color:var(--blue)">🗂️</span>
+        <div class="uc-title" style="color:var(--blue)">ERP — JVCR4010</div>
+        <div class="uc-desc">Relatório de Comissão de Vendas E-commerce Marketplace<br><br><em>Define os pedidos do período (lista mestre fiscal)</em></div>
+        <div class="uc-file" id="fn-amz-erp">Nenhum arquivo</div>
+        <input type="file" accept=".xlsx,.xls,.xml" onchange="loadAmzErp(event)">
+      </label>
+
+    </div>
+
+    <div class="uinfo" style="max-width:860px">
+      <strong>📄 Settlement:</strong> Seller Central → Relatórios → Pagamentos → Baixar .txt (aceita múltiplos)<br>
+      <strong>🗂️ ERP JVCR4010:</strong> Define a lista mestre do período — apenas pedidos deste relatório entram na conciliação.<br>
+      <strong>💡 Modo:</strong> Carregue só o Settlement para leitura bruta, ou os dois para a conciliação completa ERP × Settlement.
+    </div>
+
+    <button class="pbtn2" id="amz-proc-btn" onclick="processAmazon()" disabled style="background:#ff9900;color:#000;box-shadow:0 4px 20px rgba(255,153,0,.3)">⚡ Processar</button>
+    <div class="pst" id="amz-proc-st"></div>
+  </div>
+
+  <!-- Result screen Amazon -->
+  <div id="amz-result-screen" style="display:none">
+    <div class="hdr">
+      <div class="logo" style="color:#ff9900">Conciliação <span style="color:var(--text-dim)">Amazon</span></div>
+      <div class="period" id="amz-period">—</div>
+      <button class="bk-btn" onclick="entryNewUploadAmazon()" style="margin-left:auto">↩ Novo Upload</button>
+      <button class="bk-btn" onclick="goToHub()" style="margin-left:6px">⌂ Hub</button>
+    </div>
+    <div class="tabs">
+      <div class="tab active" id="amz-tab-btn-settlement" onclick="amzShowTab('settlement')">Settlement</div>
+      <div class="tab" id="amz-tab-btn-erp" onclick="amzShowTab('erp')" style="display:none">Conciliação ERP</div>
+      <div class="tab" id="amz-tab-btn-erpv2" onclick="amzShowTab('erpv2')">Conciliação ERP V2</div>
+    </div>
+    <div class="main">
+
+      <!-- ABA SETTLEMENT -->
+      <div id="amz-tab-settlement">
+        <div class="cards" id="amz-cards"></div>
+        <div class="flt">
+          <input class="fi" style="min-width:220px" id="amz-q" placeholder="🔍 Buscar pedido, SKU, descrição..." oninput="buildAmzTable()">
+          <select class="fi" id="amz-f-tipo" onchange="buildAmzTable()">
+            <option value="">Todos os tipos</option>
+            <option value="Order">Order</option>
+            <option value="Refund">Refund</option>
+            <option value="Chargeback Refund">Chargeback Refund</option>
+            <option value="other-transaction">other-transaction</option>
+            <option value="__global__">🌐 Sem Pedido (Global)</option>
+          </select>
+          <select class="fi" id="amz-f-amttype" onchange="buildAmzTable()">
+            <option value="">Todos amount-type</option>
+            <option value="ItemPrice">ItemPrice</option>
+            <option value="ItemFees">ItemFees</option>
+            <option value="Promotion">Promotion</option>
+            <option value="other-transaction">other-transaction</option>
+          </select>
+          <span class="cnt" id="amz-cnt">0 linhas</span>
+        </div>
+        <div class="tw">
+          <div class="ts"><table id="amz-table"><thead></thead><tbody></tbody></table></div>
+          <div class="pag" id="amz-pag"></div>
+        </div>
+      </div>
+
+      <!-- ABA ERP -->
+      <div id="amz-tab-erp" class="hidden">
+        <div id="amz-erp-empty" style="padding:40px;text-align:center;color:var(--text-dim);font-family:var(--fm);font-size:13px">
+          Carregue o arquivo ERP (JVCR4010) no upload para ver a conciliação.
+        </div>
+        <div id="amz-erp-content" class="hidden">
+          <div class="cards" id="amz-erp-cards"></div>
+          <div class="flt">
+            <input class="fi" style="min-width:200px" id="amz-erp-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpTable()">
+            <select class="fi" id="amz-erp-f-status" onchange="buildErpTable()">
+              <option value="">Todos os status</option>
+              <option value="found">✅ Encontrado</option>
+              <option value="partial">⚠️ Parcial</option>
+              <option value="missing">❌ Sem Settlement</option>
+            </select>
+            <span class="cnt" id="amz-erp-cnt">0 pedidos</span>
+          </div>
+          <div class="tw">
+            <div class="ts"><table id="amz-erp-table"><thead></thead><tbody></tbody></table></div>
+            <div class="pag" id="amz-erp-pag"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ABA ERP V2 -->
+      <div id="amz-tab-erpv2" class="hidden">
+        <div id="amz-erpv2-empty" style="padding:40px;text-align:center;color:var(--text-dim);font-family:var(--fm);font-size:13px">
+          Processe o Settlement e carregue o ERP (JVCR4010) para ver a Conciliação ERP V2.
+        </div>
+        <div id="amz-erpv2-content" class="hidden">
+          <div class="cards" id="amz-erpv2-cards"></div>
+          <div class="flt">
+            <input class="fi" style="min-width:200px" id="amz-erpv2-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpV2Table()">
+            <select class="fi" id="amz-erpv2-f-status" onchange="buildErpV2Table()">
+              <option value="">Todos os status</option>
+              <option value="conciliado">✅ Conciliado</option>
+              <option value="cancelado">🚫 Cancelado</option>
+              <option value="sem-settlement">⚠️ Sem settlement</option>
+              <option value="divergencia">❌ Divergência</option>
+            </select>
+            <span class="cnt" id="amz-erpv2-cnt">0 pedidos</span>
+            <button class="dl-btn" onclick="exportErpV2Excel()" title="Exportar todos os pedidos (sem filtro de página) para Excel">⬇ Exportar Excel</button>
+          </div>
+          <div class="tw">
+            <div class="ts"><table id="amz-erpv2-table"><thead></thead><tbody></tbody></table></div>
+            <div class="pag" id="amz-erpv2-pag"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div><!-- /#amazon-app -->
+
+<script src="js/core/hub.js"></script>
+<script src="js/managers/HistoryStorageManager.js"></script>
+<script src="js/services/shopee/navigation.js"></script>
+<script src="js/services/shopee/entryScreens.js"></script>
+<script src="js/services/meli/entryScreens.js"></script>
+<script src="js/services/meli/meliStorage.js"></script>
+<script src="js/services/meli/meliParsers.js"></script>
+<script src="js/services/meli/meliService.js"></script>
+<script src="js/components/meli/MeliDashboard.js"></script>
+<script src="js/services/meli/meliExportService.js"></script>
+<script src="js/services/shopee/fileStorage.js"></script>
+<script src="js/services/shopee/xlsxHelpers.js"></script>
+<script src="js/services/shopee/parsers.js"></script>
+<script src="js/services/shopee/processFiles.js"></script>
+<script src="js/services/shopee/formatters.js"></script>
+<script src="js/components/shopee/Dashboard.js"></script>
+<script src="js/components/shopee/Drawer.js"></script>
+<script src="js/services/shopee/exportService.js"></script>
+<script src="js/services/shopee/baixaDccService.js"></script>
+<script src="js/services/shopee/historyService.js"></script>
+<script src="js/services/meli/historyService.js"></script>
+<script src="js/services/amazon/amazonStorage.js"></script>
+<script src="js/services/amazon/amazonParsers.js"></script>
+<script src="js/services/amazon/amazonService.js"></script>
+<script src="js/components/amazon/AmazonDashboard.js"></script>
+<script src="js/services/amazon/amazonErpService.js"></script>
+<script src="js/components/amazon/AmazonErpDashboard.js"></script>
+<script src="js/components/amazon/AmazonErpV2Dashboard.js"></script>
+<script src="js/services/amazon/amazonErpV2ExportService.js"></script>
+<script src="js/services/shopeeNF/navigation.js"></script>
+<script src="js/services/shopeeNF/shopeeNFStorage.js"></script>
+<script src="js/services/shopeeNF/shopeeNFOrdersReader.js"></script>
+<script src="js/services/shopeeNF/shopeeNFService.js"></script>
+<script src="js/components/shopeeNF/ShopeeNFDashboard.js"></script>
+<script src="js/services/shopeeNF/shopeeNFExportService.js"></script>
+<script src="js/managers/UserStorageManager.js"></script>
+<script src="js/components/auth/Login.js"></script>
+<script src="js/components/auth/UserManagement.js"></script>
+<script src="js/core/auth.js"></script>
+</body>
+</html>
