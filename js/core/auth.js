@@ -230,8 +230,8 @@
 
     const wrapper = document.createElement('div');
     wrapper.innerHTML = `
-      <div class="login-screen signup-screen" id="signup-screen" style="position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.14);padding:40px 20px;">
-        <div class="login-card" style="max-width:420px;margin:0 auto;">
+      <div class="login-screen signup-screen" id="signup-screen">
+        <div class="login-card signup-card">
           <div class="login-brand">
             <div class="login-title">Criar <span>Usuário</span></div>
             <div class="login-subtitle">Cadastre uma conta com perfil usuário.</div>
@@ -245,7 +245,7 @@
             <div id="signup-error" class="login-error" role="alert" aria-live="assertive"></div>
             <div id="signup-success" class="login-info"></div>
           </form>
-          <button type="button" class="pbtn2" id="close-signup" style="margin-top:16px;">Fechar</button>
+          <button type="button" class="pbtn2 login-secondary-button" id="close-signup">Fechar</button>
         </div>
       </div>
     `;

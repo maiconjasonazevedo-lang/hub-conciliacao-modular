@@ -4,34 +4,56 @@
   justify-content:center;
   min-height:100vh;
   padding:40px 20px;
-  background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg);
+  background:linear-gradient(180deg, rgba(10,18,36,.95) 0%, rgba(12,25,48,.99) 100%);
 }
 
 .login-card{
   width:100%;
+  max-width:460px;
+  background:rgba(15,23,42,.96);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:26px;
+  padding:42px 32px;
+  box-shadow:0 26px 80px rgba(0,0,0,.35);
+}
+
+.login-card.signup-card{
   max-width:420px;
-  background:var(--surface);
-  border:1.5px solid var(--border2);
-  border-radius:20px;
-  padding:36px 28px;
-  box-shadow:0 18px 60px rgba(0,0,0,.2);
+  margin:0 auto;
+}
+
+.login-screen.signup-screen{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  background:rgba(0,0,0,.14);
+  padding:40px 20px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.login-secondary-button{
+  margin-top:16px;
+  width:100%;
 }
 
 .login-brand{margin-bottom:28px}
-.login-title{font-family:var(--fh);font-size:26px;font-weight:800;color:var(--orange);letter-spacing:-1px;margin-bottom:4px}
-.login-title span{color:var(--text-dim);font-weight:600}
-.login-subtitle{font-family:var(--fm);font-size:12px;color:var(--text-dim);line-height:1.6}
+.login-title{font-family:var(--fh);font-size:32px;font-weight:900;color:#fff;letter-spacing:-1px;margin-bottom:6px}
+.login-title span{color:var(--orange);font-weight:700}
+.login-subtitle{font-family:var(--fm);font-size:13px;color:var(--text-dim);line-height:1.7}
 
 .login-form{display:flex;flex-direction:column;gap:16px}
-.login-label{font-family:var(--fm);font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:.8px}
-.login-form input.fi{width:100%;box-sizing:border-box}
-.login-form button.pbtn2{width:100%;padding:14px 0}
-.login-info{font-family:var(--fm);font-size:11px;color:var(--text-muted);margin-top:10px}
+.login-label{font-family:var(--fm);font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.8px}
+.login-form input.fi{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#fff;padding:14px 12px;border-radius:12px;transition:border-color .2s}
+.login-form input.fi:focus{border-color:rgba(255,107,43,.7);outline:none}
+.login-form button.pbtn2{width:100%;padding:14px 0;border-radius:14px}
+.login-info{font-family:var(--fm);font-size:12px;color:var(--text-muted);margin-top:10px}
 .login-error{font-family:var(--fm);font-size:12px;color:var(--red);min-height:18px;margin-top:-8px}
-.user-management-card { max-width: 520px; }
+.user-management-card { max-width: 560px; }
 .user-list-panel { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
 .user-list { display: grid; gap: 10px; }
-.user-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-radius: 14px; background: var(--surface2); border: 1px solid var(--border2); }
-.user-list-item strong { font-family: var(--fh); font-size: 13px; }
+.user-list-item { display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; border-radius: 18px; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08); }
+.user-list-item strong { font-family: var(--fh); font-size: 13px; color: #fff; }
 .user-remove-btn { border: none; background: transparent; color: var(--red); cursor: pointer; font-size: 12px; font-family: var(--fm); }
 .user-management-actions { display: flex; justify-content: flex-end; margin-top: 18px; }

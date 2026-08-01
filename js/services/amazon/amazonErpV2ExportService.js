@@ -88,47 +88,44 @@ function exportErpV2Excel() {
     const box = icon.querySelector('.tip-box');
     if (!box) return;
 
-    // Mostra temporariamente fora de tela para medir dimensões reais
+    // Renderiza o tooltip no body para evitar clipping e bordas de cartão
+    if (!document.body.contains(box)) {
+      document.body.appendChild(box);
+      box.dataset.__portal = '1';
+    }
+
     box.style.visibility = 'hidden';
     box.style.display    = 'block';
     box.style.top        = '0px';
     box.style.left       = '0px';
+    box.style.bottom     = 'auto';
+    box.style.right      = 'auto';
 
-    const ir  = icon.getBoundingClientRect();   // rect do ícone
+    const ir  = icon.getBoundingClientRect();
     const bw  = box.offsetWidth;
     const bh  = box.offsetHeight;
     const vw  = window.innerWidth;
     const vh  = window.innerHeight;
 
-    // Posição ideal: centralizado horizontalmente sobre o ícone, acima dele
     let left = ir.left + ir.width / 2 - bw / 2;
-    let top  = ir.top  - bh - GAP;
+    let top  = ir.top - bh - GAP;
 
-    // Proteção horizontal
-    if (left < MARGIN)          left = MARGIN;
+    if (left < MARGIN) left = MARGIN;
     if (left + bw > vw - MARGIN) left = vw - MARGIN - bw;
 
-    // Se não cabe acima, vai abaixo
     if (top < MARGIN) {
       top = ir.bottom + GAP;
-      // Ajusta seta: aponta para cima quando o balão está abaixo
       box.dataset.below = '1';
     } else {
       delete box.dataset.below;
     }
 
-    // Proteção vertical inferior (caso abaixo também não caiba — raro)
     if (top + bh > vh - MARGIN) top = vh - MARGIN - bh;
 
-    // Ajuste da seta conforme posição horizontal real
-    const arrowLeft = Math.min(
-      Math.max(ir.left + ir.width / 2 - left, 12),
-      bw - 12
-    );
-    box.style.setProperty('--tip-arrow-left', arrowLeft + 'px');
-
-    box.style.top        = top  + 'px';
-    box.style.left       = left + 'px';
+    box.style.position = 'fixed';
+    box.style.top = top + 'px';
+    box.style.left = left + 'px';
+    box.style.zIndex = '100000';
     box.style.visibility = 'visible';
   }, true);
 

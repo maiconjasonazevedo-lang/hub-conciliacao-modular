@@ -51,12 +51,12 @@
       <div class="hub-card-status">Disponível</div>
     </div>
   </div>
-  <div class="hub-user-panel" id="hub-user-panel" style="display:none;margin-top:18px;gap:12px;align-items:center;">
+  <div class="hub-user-panel" id="hub-user-panel">
     <div>Conectado como <strong id="hub-user-name"></strong> (<span id="hub-user-role"></span>)</div>
-    <button id="logout-button" class="pbtn2" style="padding:8px 14px;">Logout</button>
+    <button id="logout-button" class="pbtn2 pbtn2-small">Logout</button>
   </div>
   <div class="hub-dev-msg" id="hub-dev-msg">⚙️ Em desenvolvimento</div>
-  <button id="open-user-management-hub" class="pbtn2" style="display:none;margin-top:18px;padding:12px 18px;">Gerenciar usuários</button>
+  <button id="open-user-management-hub" class="pbtn2 pbtn2-small" data-hidden>Gerenciar usuários</button>
 </div>
 
 <!-- ══════ SHOPEE HOME ══════ -->
@@ -64,9 +64,9 @@
   <div class="hub-logo">Shopee <span>Apps</span></div>
   <div class="hub-tag">
     Selecione o app Shopee &nbsp;·&nbsp;
-    <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToHub()">← Voltar ao Hub</span>
+    <span class="page-link" onclick="goToHub()">← Voltar ao Hub</span>
   </div>
-  <div class="hub-grid" style="grid-template-columns:repeat(auto-fill,minmax(180px,220px))">
+  <div class="hub-grid hub-grid-compact">
     <div class="hub-card active" onclick="openShopeeConciSaque()">
       <span class="hub-card-icon">💰</span>
       <div class="hub-card-name">Conciliação de Saque</div>
@@ -82,25 +82,25 @@
 </div>
 
 <!-- ══════ SHOPEE ENTRY SCREEN ══════ -->
-<div id="shopee-entry-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg)">
-  <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:var(--orange);margin-bottom:4px;letter-spacing:-1px">Conciliação Shopee <span style="color:var(--text-dim);font-weight:600">× Anymarket</span></div>
-  <div style="color:var(--text-dim);font-size:12px;margin-bottom:40px;font-family:var(--fm)">Como deseja iniciar? &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToShopeeHome()">← Shopee Apps</span></div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;width:100%;max-width:680px">
-    <label style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'">
-      <span style="font-size:32px">📂</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Abrir Histórico</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">.json salvo anteriormente</div>
-      <input type="file" accept=".json" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="entryLoadShopee(event)">
+<div id="shopee-entry-screen" class="page-screen" style="display:none;">
+  <div class="page-title">Conciliação Shopee <span>× Anymarket</span></div>
+  <div class="page-subtitle">Como deseja iniciar? &nbsp;·&nbsp; <span class="page-link" onclick="goToShopeeHome()">← Shopee Apps</span></div>
+  <div class="page-grid page-grid-compact">
+    <label class="action-card action-card-file" onclick="entryLoadShopee(event)">
+      <span class="action-card-icon">📂</span>
+      <div class="action-card-title">Abrir Histórico</div>
+      <div class="action-card-desc">.json salvo anteriormente</div>
+      <input type="file" accept=".json" class="file-overlay-input" onchange="entryLoadShopee(event)">
     </label>
-    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryNewUploadShopee()">
-      <span style="font-size:32px">📤</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Novo Upload</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Processar novos relatórios</div>
+    <div class="action-card" onclick="entryNewUploadShopee()">
+      <span class="action-card-icon">📤</span>
+      <div class="action-card-title">Novo Upload</div>
+      <div class="action-card-desc">Processar novos relatórios</div>
     </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='var(--orange)'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryEmptyShopee()">
-      <span style="font-size:32px">👀</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Entrar sem dados</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Ver tela vazia / explorar</div>
+    <div class="action-card" onclick="entryEmptyShopee()">
+      <span class="action-card-icon">👀</span>
+      <div class="action-card-title">Entrar sem dados</div>
+      <div class="action-card-desc">Ver tela vazia / explorar</div>
     </div>
   </div>
 </div>
@@ -109,11 +109,11 @@
 <div id="shopee-nf-app" style="display:none">
 
   <!-- Upload NF screen -->
-  <div id="snf-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,107,43,.06) 0%,transparent 60%),radial-gradient(ellipse at 80% 80%,rgba(61,158,255,.04) 0%,transparent 50%),var(--bg)">
-    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:var(--orange);margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">NF Shopee</span></div>
-    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Cruze os itens da NF de comissão/taxas com o relatório de pedidos &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToShopeeHome()">← Shopee Apps</span></div>
+  <div id="snf-upload-screen" class="page-screen">
+    <div class="page-title">Conciliação <span>NF Shopee</span></div>
+    <div class="page-subtitle">Cruze os itens da NF de comissão/taxas com o relatório de pedidos &nbsp;·&nbsp; <span class="page-link" onclick="goToShopeeHome()">← Shopee Apps</span></div>
 
-    <div class="ugrid" style="max-width:860px;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+    <div class="page-grid page-grid-wide">
 
       <!-- Orders -->
       <label class="uc" id="snf-uc-orders">
@@ -126,48 +126,45 @@
       </label>
 
       <!-- Valores da NF -->
-      <div class="uc" style="cursor:default;pointer-events:none;border-style:solid;border-color:var(--border2)">
+      <div class="uc readonly-card">
         <span class="uc-icon">🧾</span>
         <div class="uc-title">Valores da Nota Fiscal</div>
-        <div class="uc-desc" style="pointer-events:all">
-          <div style="margin-bottom:10px;color:var(--text-dim);font-size:10px">Preencha os valores da NF recebida da Shopee</div>
+        <div class="uc-desc">
+          <div class="field-section">Preencha os valores da NF recebida da Shopee</div>
 
-          <!-- Grupo Comissão -->
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--orange);margin-bottom:5px;font-family:var(--fm)">Comissão</div>
-          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Serv. de comissão</span>
-              <input id="snf-nf-comissao" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+          <div class="field-section field-section--group">
+            <div class="field-group-title brand-orange">Comissão</div>
+            <div class="field-row">
+              <span>Serv. de comissão</span>
+              <input id="snf-nf-comissao" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Taxa por item vendido</span>
-              <input id="snf-nf-taxa-item" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            <div class="field-row">
+              <span>Taxa por item vendido</span>
+              <input id="snf-nf-taxa-item" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. comissão</span>
-              <input id="snf-nf-abat-comissao" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            <div class="field-row">
+              <span class="label-red">(-) Abat. devol. comissão</span>
+              <input id="snf-nf-abat-comissao" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
           </div>
 
-          <!-- Grupo Opcionais -->
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--blue);margin-bottom:5px;font-family:var(--fm)">Opcionais / Personalizados</div>
-          <div style="display:flex;flex-direction:column;gap:5px;margin-bottom:10px">
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. opcionais</span>
-              <input id="snf-nf-abat-opcionais" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+          <div class="field-section field-section--group">
+            <div class="field-group-title brand-blue">Opcionais / Personalizados</div>
+            <div class="field-row">
+              <span class="label-red">(-) Abat. devol. opcionais</span>
+              <input id="snf-nf-abat-opcionais" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
           </div>
 
-          <!-- Grupo Processamento -->
-          <div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--green);margin-bottom:5px;font-family:var(--fm)">Processamento de Pagamentos</div>
-          <div style="display:flex;flex-direction:column;gap:5px">
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--text-dim);min-width:130px">Serv. de processamento</span>
-              <input id="snf-nf-processamento" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+          <div class="field-section field-section--group">
+            <div class="field-group-title brand-green">Processamento de Pagamentos</div>
+            <div class="field-row">
+              <span>Serv. de processamento</span>
+              <input id="snf-nf-processamento" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
-            <div style="display:flex;align-items:center;gap:6px;pointer-events:all">
-              <span style="font-size:9px;color:var(--red);min-width:130px">(-) Abat. devol. processamento</span>
-              <input id="snf-nf-abat-proc" type="number" step="0.01" placeholder="0,00" style="flex:1;background:var(--surface2);border:1px solid var(--border2);border-radius:4px;color:var(--text);padding:3px 6px;font-family:var(--fm);font-size:11px;outline:none;pointer-events:all">
+            <div class="field-row">
+              <span class="label-red">(-) Abat. devol. processamento</span>
+              <input id="snf-nf-abat-proc" class="fi medium" type="number" step="0.01" placeholder="0,00">
             </div>
           </div>
         </div>
@@ -175,7 +172,7 @@
 
     </div>
 
-    <div class="uinfo" style="max-width:860px;margin-top:16px">
+    <div class="uinfo page-section">
       <strong>💡 Comissão:</strong> <em>Taxa de comissão líquida</em> + <em>Taxa de serviço líquida</em> do relatório Orders.<br>
       <strong>💳 Processamento:</strong> <em>Taxa de transação</em> do relatório Orders.<br>
       <strong>↩ Devoluções:</strong> Pedidos com <em>Status da Devolução / Reembolso</em> preenchido são isolados como abatimentos.<br>
@@ -192,7 +189,7 @@
       <div class="logo">Conciliação <span>NF Shopee</span></div>
       <div class="period" id="snf-period">—</div>
       <button class="dl-btn" onclick="snfExportExcel()">⬇ Exportar Excel</button>
-      <button class="bk-btn" style="margin-left:auto" onclick="snfNovoUpload()">↩ Novo Upload</button>
+      <button class="bk-btn bk-auto" onclick="snfNovoUpload()">↩ Novo Upload</button>
       <button class="bk-btn" style="margin-left:6px" onclick="goToShopeeHome()">⌂ Shopee Apps</button>
     </div>
 
@@ -201,10 +198,10 @@
       <div class="cards" id="snf-cards"></div>
 
       <!-- Painel comparativo NF x Orders -->
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📊 Comparativo: NF × Relatório Orders</div>
+      <div class="section-heading">📊 Comparativo: NF × Relatório Orders</div>
       <div class="tw" style="margin-bottom:18px">
         <div class="ts">
-          <table id="snf-compare-table" style="width:100%">
+          <table id="snf-compare-table" class="table-full">
             <thead>
               <tr>
                 <th>Grupo / Item</th>
@@ -220,9 +217,9 @@
       </div>
 
       <!-- Tabela de pedidos detalhada -->
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📋 Pedidos do Período</div>
+      <div class="section-heading">📋 Pedidos do Período</div>
       <div class="flt">
-        <input class="fi" style="min-width:220px" id="snf-q" placeholder="🔍 Buscar pedido, produto..." oninput="snfBuildTable()">
+        <input class="fi large" id="snf-q" placeholder="🔍 Buscar pedido, produto..." oninput="snfBuildTable()">
         <select class="fi" id="snf-f-status" onchange="snfBuildTable()">
           <option value="">Todos os status</option>
           <option value="faturado">Faturados</option>
@@ -241,34 +238,34 @@
 </div><!-- /#shopee-nf-app -->
 
 <!-- ══════ MELI ENTRY SCREEN ══════ -->
-<div id="meli-entry-screen" style="display:none;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(241,196,15,.05) 0%,transparent 60%),var(--bg)">
-  <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#f1c40f;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Mercado Livre</span></div>
-  <div style="color:var(--text-dim);font-size:12px;margin-bottom:40px;font-family:var(--fm)">Como deseja iniciar? &nbsp;·&nbsp; <span style="cursor:pointer;color:#f1c40f;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;width:100%;max-width:680px">
-    <label style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'">
-      <span style="font-size:32px">📂</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Abrir Histórico</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">.json salvo anteriormente</div>
-      <input type="file" accept=".json" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%" onchange="entryLoadML(event)">
+<div id="meli-entry-screen" class="page-screen" style="display:none">
+  <div class="page-title">Conciliação <span>Mercado Livre</span></div>
+  <div class="page-subtitle">Como deseja iniciar? &nbsp;·&nbsp; <span class="page-link" onclick="goToHub()">← Voltar ao Hub</span></div>
+  <div class="page-grid page-grid-compact">
+    <label class="action-card action-card-file" onclick="entryLoadML(event)">
+      <span class="action-card-icon">📂</span>
+      <div class="action-card-title">Abrir Histórico</div>
+      <div class="action-card-desc">.json salvo anteriormente</div>
+      <input type="file" accept=".json" class="file-overlay-input" onchange="entryLoadML(event)">
     </label>
-    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryNewUploadML()">
-      <span style="font-size:32px">📤</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Novo Upload</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Processar novos relatórios</div>
+    <div class="action-card" onclick="entryNewUploadML()">
+      <span class="action-card-icon">📤</span>
+      <div class="action-card-title">Novo Upload</div>
+      <div class="action-card-desc">Processar novos relatórios</div>
     </div>
-    <div style="background:var(--surface);border:1.5px solid var(--border2);border-radius:14px;padding:28px 20px;cursor:pointer;transition:all .22s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px" onmouseenter="this.style.borderColor='#f1c40f'" onmouseleave="this.style.borderColor='var(--border2)'" onclick="entryEmptyML()">
-      <span style="font-size:32px">👀</span>
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;color:var(--text)">Entrar sem dados</div>
-      <div style="font-size:10.5px;color:var(--text-dim);font-family:var(--fm)">Ver tela vazia / explorar</div>
+    <div class="action-card" onclick="entryEmptyML()">
+      <span class="action-card-icon">👀</span>
+      <div class="action-card-title">Entrar sem dados</div>
+      <div class="action-card-desc">Ver tela vazia / explorar</div>
     </div>
   </div>
 </div>
 
 <!-- ══════ SHOPEE APP (todo o sistema existente) ══════ -->
 <div id="shopee-app" style="display:none">
-<div id="upload-screen">
-  <div class="ul">Conciliação Shopee <span>× Anymarket</span></div>
-  <div class="utag">Faça upload dos relatórios para processar sua conciliação &nbsp;·&nbsp; <span style="cursor:pointer;color:var(--orange);font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+<div id="upload-screen" class="page-screen">
+  <div class="page-title">Conciliação Shopee <span>× Anymarket</span></div>
+  <div class="page-subtitle">Faça upload dos relatórios para processar sua conciliação &nbsp;·&nbsp; <span class="page-link" onclick="goToHub()">← Voltar ao Hub</span></div>
 
   <div class="ugrid">
 
@@ -317,7 +314,6 @@
     <strong>📋 Para NFs completas:</strong> No Anymarket, exporte <em>dois</em> arquivos — um com o período do Income (pedidos antigos) e outro com o período atual — e faça upload dos dois ao mesmo tempo no campo Anymarket (aceita múltiplos arquivos).<br>
     <strong>🛍️ Orders:</strong> opcional, enriquece custos dos pedidos novos.
   </div>
-
   <button class="pbtn2" id="proc-btn" onclick="processFiles()" disabled>⚡ Processar Conciliação</button>
   <div class="pst" id="proc-st"></div>
 </div>
@@ -328,12 +324,12 @@
     <div class="logo">Conciliação Shopee <span>× Anymarket</span></div>
     <div class="period" id="hdr-period">—</div>
     <button class="dl-btn" onclick="downloadCSV()">⬇ Exportar Relatorio DCC</button>
-    <label class="dl-btn" style="background:var(--blue);cursor:pointer;margin-left:6px" title="Carregar relatório DCC para gerar Baixa">📂 Carregar DCC<input type="file" accept=".ods,.csv,.xlsx" style="display:none" onchange="loadBaixaDCC(event)"></label>
-    <button class="dl-btn" id="btn-baixa-dcc" onclick="downloadBaixaDCC()" disabled style="opacity:.4;background:var(--purple);margin-left:6px">⬇ Baixa DCC</button>
-    <label class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;margin-left:6px" title="Carregar histórico JSON Shopee">📂 Histórico<input type="file" accept=".json" style="display:none" onchange="loadHistShopee(event)"></label>
-    <button class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);margin-left:4px" onclick="saveHistShopee()" title="Salvar histórico JSON Shopee">💾 Salvar Hist.</button>
-    <button class="bk-btn" onclick="goToHub()" style="margin-left:auto">⌂ Hub</button>
-    <button class="bk-btn" onclick="entryNewUploadShopee()" style="margin-left:6px">↩ Novo Upload</button>
+    <label class="dl-btn dl-btn-primary ml-6" title="Carregar relatório DCC para gerar Baixa">📂 Carregar DCC<input type="file" accept=".ods,.csv,.xlsx" class="file-hidden" onchange="loadBaixaDCC(event)"></label>
+    <button class="dl-btn purple ml-6" id="btn-baixa-dcc" onclick="downloadBaixaDCC()" disabled>⬇ Baixa DCC</button>
+    <label class="dl-btn light ml-6" title="Carregar histórico JSON Shopee">📂 Histórico<input type="file" accept=".json" class="file-hidden" onchange="loadHistShopee(event)"></label>
+    <button class="dl-btn light ml-6" onclick="saveHistShopee()" title="Salvar histórico JSON Shopee">💾 Salvar Hist.</button>
+    <button class="bk-btn bk-auto" onclick="goToHub()">⌂ Hub</button>
+    <button class="bk-btn ml-6" onclick="entryNewUploadShopee()">↩ Novo Upload</button>
   </div>
   <div class="tabs">
     <div class="tab active" onclick="showTab('dash')">Dashboard</div>
@@ -352,7 +348,7 @@
     </div>
     <div id="tab-trans" class="hidden">
       <div class="flt">
-        <input class="fi" style="min-width:220px" id="ft-q" placeholder="🔍 Buscar pedido, tipo...">
+        <input class="fi large" id="ft-q" placeholder="🔍 Buscar pedido, tipo...">
         <select class="fi" id="ft-tp"><option value="">Todos os Tipos</option></select>
         <select class="fi" id="ft-sq"><option value="">Todos os Saques</option></select>
         <span class="cnt" id="cnt-tr">0 linhas</span>
@@ -361,7 +357,7 @@
     </div>
     <div id="tab-lib" class="hidden">
       <div class="flt">
-        <input class="fi" style="min-width:220px" id="fl-q" placeholder="🔍 Buscar pedido, produto...">
+        <input class="fi large" id="fl-q" placeholder="🔍 Buscar pedido, produto...">
         <select class="fi" id="fl-sq"><option value="">Todos os Saques</option></select>
         <span class="cnt" id="cnt-lb">0 pedidos</span>
       </div>
@@ -370,7 +366,7 @@
     <div id="tab-saques" class="hidden"><div id="saq-det"></div></div>
     <div id="tab-nfs" class="hidden">
       <div class="flt">
-        <input class="fi" style="min-width:220px" id="fn-q" placeholder="🔍 Buscar NF, pedido, produto...">
+        <input class="fi large" id="fn-q" placeholder="🔍 Buscar NF, pedido, produto...">
         <select class="fi" id="fn-st2"><option value="">Todos</option><option value="com">Com NF</option><option value="sem">Sem NF</option></select>
         <span class="cnt" id="cnt-nf2">0 pedidos</span>
       </div>
@@ -387,11 +383,11 @@
 <!-- ══════ MERCADO LIVRE APP ══════ -->
 <div id="meli-app" style="display:none">
   <!-- Upload screen ML -->
-  <div id="meli-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,193,7,.05) 0%,transparent 60%),var(--bg)">
-    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#f1c40f;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Mercado Livre</span></div>
-    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Faça upload dos dois relatórios para processar a conciliação &nbsp;·&nbsp; <span style="cursor:pointer;color:#f1c40f;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
-    <div class="ugrid" style="max-width:640px">
-      <label class="uc" id="uc-ml-sca" style="border-color:#f1c40f33">
+  <div id="meli-upload-screen" class="page-screen">
+    <div class="page-title">Conciliação <span>Mercado Livre</span></div>
+    <div class="page-subtitle">Faça upload dos dois relatórios para processar a conciliação &nbsp;·&nbsp; <span class="page-link" onclick="goToHub()">← Voltar ao Hub</span></div>
+    <div class="ugrid page-grid page-grid-compact">
+      <label class="uc brand-border-yellow" id="uc-ml-sca">
         <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
         <span class="uc-icon">📊</span>
         <div class="uc-title">Relatório SCA</div>
@@ -399,7 +395,7 @@
         <div class="uc-file" id="fn-ml-sca">Nenhum arquivo</div>
         <input type="file" accept=".xlsx,.xls,.ods" onchange="loadMeliFile(event,'sca')">
       </label>
-      <label class="uc" id="uc-ml-ec" style="border-color:#f1c40f33">
+      <label class="uc brand-border-yellow" id="uc-ml-ec">
         <span class="uc-badge">✓</span><span class="uc-req">Obrigatório</span>
         <span class="uc-icon">🛒</span>
         <div class="uc-title">Relatório E-commerce</div>
@@ -408,31 +404,31 @@
         <input type="file" accept=".xlsx,.xls,.ods" onchange="loadMeliFile(event,'ec')">
       </label>
     </div>
-    <div class="uinfo" style="max-width:640px">
+    <div class="uinfo page-section">
       <strong>💡 Como funciona:</strong> O sistema cruza os pedidos pelo <strong>Pedido ML = Pedido Marketplace</strong> e separa a <strong>Comissão ML</strong> em <strong>ComissaoReal</strong> (Despesa Base + Despesa Desconto ML) e <strong>FreteML</strong> (Frete Marketplace recebido da Any).
     </div>
-    <button class="pbtn2" id="meli-proc-btn" onclick="processMeli()" disabled style="background:#f1c40f;color:#000;box-shadow:0 4px 20px rgba(241,196,15,.3)">⚡ Processar Conciliação ML</button>
+    <button class="pbtn2 brand-btn-yellow" id="meli-proc-btn" onclick="processMeli()" disabled>⚡ Processar Conciliação ML</button>
     <div class="pst" id="meli-proc-st"></div>
   </div>
 
   <!-- Result screen ML -->
   <div id="meli-result-screen" style="display:none">
     <div class="hdr">
-      <div class="logo" style="color:#f1c40f">Conciliação <span style="color:var(--text-dim)">Mercado Livre</span></div>
+      <div class="logo brand-yellow">Conciliação <span>Mercado Livre</span></div>
       <div class="period" id="meli-period">—</div>
-      <button class="dl-btn" onclick="downloadMeliODS()" style="background:#f1c40f;color:#000">⬇ Exportar ODS</button>
-      <label class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);cursor:pointer;margin-left:6px" title="Carregar histórico JSON ML">📂 Histórico<input type="file" accept=".json" style="display:none" onchange="loadHistML(event)"></label>
-      <button class="dl-btn" style="background:var(--surface2);border:1px solid var(--border);color:var(--text-dim);margin-left:4px" onclick="saveHistML()" title="Salvar histórico JSON ML">💾 Salvar Hist.</button>
-      <button class="bk-btn" onclick="entryNewUploadML()" style="margin-left:6px">↩ Novo Upload</button>
-      <button class="bk-btn" onclick="goToHub()" style="margin-left:6px">⌂ Hub</button>
+      <button class="dl-btn brand-yellow" onclick="downloadMeliODS()">⬇ Exportar ODS</button>
+      <label class="dl-btn light ml-6" title="Carregar histórico JSON ML">📂 Histórico<input type="file" accept=".json" class="file-hidden" onchange="loadHistML(event)"></label>
+      <button class="dl-btn light ml-6" onclick="saveHistML()" title="Salvar histórico JSON ML">💾 Salvar Hist.</button>
+      <button class="bk-btn ml-6" onclick="entryNewUploadML()">↩ Novo Upload</button>
+      <button class="bk-btn ml-6" onclick="goToHub()">⌂ Hub</button>
     </div>
     <!-- Cards resumo -->
     <div class="main">
       <div class="cards" id="meli-cards"></div>
       <!-- Tabela -->
-      <div style="font-family:var(--fh);font-size:14px;font-weight:700;margin-bottom:12px;color:var(--text)">📋 Pedidos Conciliados</div>
+      <div class="section-heading">📋 Pedidos Conciliados</div>
       <div class="flt">
-        <input class="fi" style="min-width:220px" id="meli-q" placeholder="🔍 Buscar pedido, nota..." oninput="buildMeliTable()">
+        <input class="fi large" id="meli-q" placeholder="🔍 Buscar pedido, nota..." oninput="buildMeliTable()">
         <select class="fi" id="meli-sit" onchange="buildMeliTable()">
           <option value="">Todas Situações</option>
         </select>
@@ -452,21 +448,16 @@
 <div id="amazon-app" style="display:none">
 
   <!-- Upload screen Amazon -->
-  <div id="amz-upload-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:40px 20px;background:radial-gradient(ellipse at 30% 20%,rgba(255,153,0,.07) 0%,transparent 60%),var(--bg)">
-    <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:#ff9900;margin-bottom:4px;letter-spacing:-1px">Conciliação <span style="color:var(--text-dim);font-weight:600">Amazon</span></div>
-    <div style="color:var(--text-dim);font-size:12px;margin-bottom:36px;font-family:var(--fm)">Faça upload do(s) Settlement Report(s) &nbsp;·&nbsp; <span style="cursor:pointer;color:#ff9900;font-size:11px" onclick="goToHub()">← Voltar ao Hub</span></div>
+  <div id="amz-upload-screen" class="page-screen">
+    <div class="page-title brand-orange">Conciliação <span>Amazon</span></div>
+    <div class="page-subtitle">Faça upload do(s) Settlement Report(s) &nbsp;·&nbsp; <span class="page-link brand-orange" onclick="goToHub()">← Voltar ao Hub</span></div>
 
-    <!-- Separador visual -->
-    <div style="width:100%;max-width:860px;display:flex;align-items:center;gap:12px;margin-bottom:4px">
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-      <div style="font-family:var(--fm);font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase">Fontes de dados</div>
-      <div style="flex:1;height:1px;background:var(--border)"></div>
-    </div>
+    <div class="section-divider"></div>
 
-    <div class="ugrid" style="max-width:860px">
+    <div class="ugrid page-grid page-grid-wide">
 
       <!-- Settlement -->
-      <label class="uc" id="uc-amz-settlement" style="border-color:#ff990033">
+      <label class="uc brand-border-orange" id="uc-amz-settlement">
         <span class="uc-badge">✓</span>
         <span class="uc-multi">Múltiplos</span>
         <span class="uc-icon">📄</span>
@@ -478,10 +469,10 @@
       </label>
 
       <!-- ERP -->
-      <label class="uc" id="uc-amz-erp" style="border-color:#3d9eff33">
+      <label class="uc brand-border-blue" id="uc-amz-erp">
         <span class="uc-badge">✓</span>
-        <span class="uc-icon" style="color:var(--blue)">🗂️</span>
-        <div class="uc-title" style="color:var(--blue)">ERP — JVCR4010</div>
+        <span class="uc-icon brand-blue">🗂️</span>
+        <div class="uc-title brand-blue">ERP — JVCR4010</div>
         <div class="uc-desc">Relatório de Comissão de Vendas E-commerce Marketplace<br><br><em>Define os pedidos do período (lista mestre fiscal)</em></div>
         <div class="uc-file" id="fn-amz-erp">Nenhum arquivo</div>
         <input type="file" accept=".xlsx,.xls,.xml" onchange="loadAmzErp(event)">
@@ -489,27 +480,27 @@
 
     </div>
 
-    <div class="uinfo" style="max-width:860px">
+    <div class="uinfo page-section">
       <strong>📄 Settlement:</strong> Seller Central → Relatórios → Pagamentos → Baixar .txt (aceita múltiplos)<br>
       <strong>🗂️ ERP JVCR4010:</strong> Define a lista mestre do período — apenas pedidos deste relatório entram na conciliação.<br>
       <strong>💡 Modo:</strong> Carregue só o Settlement para leitura bruta, ou os dois para a conciliação completa ERP × Settlement.
     </div>
 
-    <button class="pbtn2" id="amz-proc-btn" onclick="processAmazon()" disabled style="background:#ff9900;color:#000;box-shadow:0 4px 20px rgba(255,153,0,.3)">⚡ Processar</button>
+    <button class="pbtn2 brand-btn-orange" id="amz-proc-btn" onclick="processAmazon()" disabled>⚡ Processar</button>
     <div class="pst" id="amz-proc-st"></div>
   </div>
 
   <!-- Result screen Amazon -->
   <div id="amz-result-screen" style="display:none">
     <div class="hdr">
-      <div class="logo" style="color:#ff9900">Conciliação <span style="color:var(--text-dim)">Amazon</span></div>
+      <div class="logo brand-orange">Conciliação <span>Amazon</span></div>
       <div class="period" id="amz-period">—</div>
-      <button class="bk-btn" onclick="entryNewUploadAmazon()" style="margin-left:auto">↩ Novo Upload</button>
-      <button class="bk-btn" onclick="goToHub()" style="margin-left:6px">⌂ Hub</button>
+      <button class="bk-btn bk-auto" onclick="entryNewUploadAmazon()">↩ Novo Upload</button>
+      <button class="bk-btn ml-6" onclick="goToHub()">⌂ Hub</button>
     </div>
     <div class="tabs">
       <div class="tab active" id="amz-tab-btn-settlement" onclick="amzShowTab('settlement')">Settlement</div>
-      <div class="tab" id="amz-tab-btn-erp" onclick="amzShowTab('erp')" style="display:none">Conciliação ERP</div>
+      <div class="tab hidden" id="amz-tab-btn-erp" onclick="amzShowTab('erp')">Conciliação ERP</div>
       <div class="tab" id="amz-tab-btn-erpv2" onclick="amzShowTab('erpv2')">Conciliação ERP V2</div>
     </div>
     <div class="main">
@@ -518,7 +509,7 @@
       <div id="amz-tab-settlement">
         <div class="cards" id="amz-cards"></div>
         <div class="flt">
-          <input class="fi" style="min-width:220px" id="amz-q" placeholder="🔍 Buscar pedido, SKU, descrição..." oninput="buildAmzTable()">
+          <input class="fi large" id="amz-q" placeholder="🔍 Buscar pedido, SKU, descrição..." oninput="buildAmzTable()">
           <select class="fi" id="amz-f-tipo" onchange="buildAmzTable()">
             <option value="">Todos os tipos</option>
             <option value="Order">Order</option>
@@ -544,13 +535,13 @@
 
       <!-- ABA ERP -->
       <div id="amz-tab-erp" class="hidden">
-        <div id="amz-erp-empty" style="padding:40px;text-align:center;color:var(--text-dim);font-family:var(--fm);font-size:13px">
+        <div id="amz-erp-empty" class="empty-state">
           Carregue o arquivo ERP (JVCR4010) no upload para ver a conciliação.
         </div>
         <div id="amz-erp-content" class="hidden">
           <div class="cards" id="amz-erp-cards"></div>
           <div class="flt">
-            <input class="fi" style="min-width:200px" id="amz-erp-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpTable()">
+            <input class="fi large" id="amz-erp-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpTable()">
             <select class="fi" id="amz-erp-f-status" onchange="buildErpTable()">
               <option value="">Todos os status</option>
               <option value="found">✅ Encontrado</option>
@@ -568,13 +559,13 @@
 
       <!-- ABA ERP V2 -->
       <div id="amz-tab-erpv2" class="hidden">
-        <div id="amz-erpv2-empty" style="padding:40px;text-align:center;color:var(--text-dim);font-family:var(--fm);font-size:13px">
+        <div id="amz-erpv2-empty" class="empty-state">
           Processe o Settlement e carregue o ERP (JVCR4010) para ver a Conciliação ERP V2.
         </div>
         <div id="amz-erpv2-content" class="hidden">
           <div class="cards" id="amz-erpv2-cards"></div>
           <div class="flt">
-            <input class="fi" style="min-width:200px" id="amz-erpv2-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpV2Table()">
+            <input class="fi large" id="amz-erpv2-q" placeholder="🔍 Buscar pedido, NF, pedido venda..." oninput="buildErpV2Table()">
             <select class="fi" id="amz-erpv2-f-status" onchange="buildErpV2Table()">
               <option value="">Todos os status</option>
               <option value="conciliado">✅ Conciliado</option>

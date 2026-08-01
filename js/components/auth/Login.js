@@ -18,7 +18,7 @@
           <div class="login-info">Use uma conta cadastrada no gerenciamento de usuários.</div>
           <div id="login-error" class="login-error" role="alert" aria-live="assertive"></div>
         </form>
-        <button type="button" id="open-signup" class="pbtn2" style="margin-top:16px;">Criar usuário</button>
+        <button type="button" id="open-signup" class="pbtn2 login-secondary-button">Criar usuário</button>
       `;
       this.className = 'login-screen';
       this.appendChild(container);
