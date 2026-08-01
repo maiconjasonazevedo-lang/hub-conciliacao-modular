@@ -22,3 +22,12 @@ Thumbs.db
 # Saídas de build se vierem a existir
 /dist/
 /build/
+
+# Temporary files from parser validation
+temp_*
+temp-*
+test_jscript*.js
+validate_amazon_parser.js
+
+# local validation artifacts
+temp_validation_raw.txt
