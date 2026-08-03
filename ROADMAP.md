@@ -1,82 +1,58 @@
 # Roadmap da Migração
 
-Migração incremental do monólito `hub_conciliacao_marketplaces_V21.html`
-para a arquitetura modular. Todas as etapas abaixo foram concluídas.
+A refatoração estrutural do projeto já foi concluída. O foco atual mudou de "migrar o monólito para módulos" para "evoluir o pipeline Amazon sem quebrar o comportamento existente".
+
+## Status atual
+- Refatoração modular: concluída.
+- Integração incremental do pipeline Amazon: em andamento.
+- Fase 3.1: concluída com integração parcial do fluxo novo de Settlement e deduplicação por hash.
+- Fase 3.2: próxima etapa, com integração do Transaction Report ao fluxo principal.
 
 ## Etapa 1 — Core da aplicação ✅
-
-- Auditoria completa do arquivo original (25 seções mapeadas pelos
-  próprios comentários do autor).
-- Extração do que é genuinamente compartilhado entre marketplaces:
-  `core/hub.js` (navegação) e `managers/HistoryStorageManager.js`
-  (infraestrutura genérica de histórico).
-- Achado: quase não há código "core" além disso — cada marketplace tem
-  seus próprios parsers/formatadores/leitura de XLSX (ver ARCHITECTURE.md).
+- Auditoria completa do arquivo original.
+- Extração do que é genuinamente compartilhado entre marketplaces.
+- Resultado: estrutura modular estabilizada com separação por responsabilidade.
 
 ## Etapa 2 — Shopee ✅
-
-- 12 arquivos criados (`services/shopee/*`, `components/shopee/*`).
-- `csvN` identificada como uso exclusivo Shopee (apesar de estar
-  fisicamente perto da seção Amazon no arquivo original) e movida para
-  `exportService.js`.
-- Verificação byte-a-byte dos 14 blocos de código + `node --check`
-  individual e combinado com o Core.
+- Módulo Shopee extraído para arquivos próprios.
 
 ## Etapa 3 — Mercado Livre ✅
-
-- 7 arquivos criados (`services/meli/*`, `components/meli/*`).
-- Seção original (sem subdivisão interna) dividida em
-  storage/parsers/service/dashboard/export por limite de função.
-- Confirmado zero dependência cruzada com o módulo Shopee.
+- Módulo Mercado Livre extraído para arquivos próprios.
 
 ## Etapa 4 — Amazon ✅
-
-- 8 arquivos criados (`services/amazon/*`, `components/amazon/*`).
-- Três seções originais (Módulo, ERP, ERP V2) divididas por
-  responsabilidade.
-- Confirmado isolamento total dos demais marketplaces.
+- Módulo Amazon extraído para arquivos próprios.
+- O fluxo atual passou a usar uma camada de importação, parsing e indexação mais estruturada.
 
 ## Etapa 5 — Shopee NF ✅
-
-- 6 arquivos criados (`services/shopeeNF/*`, `components/shopeeNF/*`).
-- Seção original já vinha com boa subdivisão interna pelo autor;
-  mapeamento quase 1:1.
+- Módulo Shopee NF extraído para arquivos próprios.
 
 ## Etapa 6 — Revisão final ✅
-
-- CSS dividido em 5 arquivos (`variables`, `reset`, `layout`,
-  `components`, `tables`), verificado com o mesmo rigor do JS.
-- `index.html` final montado, referenciando os 5 CSS e os 35 JS na
-  ordem de carregamento correta.
-- Auditoria cruzada: todo `onclick=`/`onchange=` do HTML confirmado
-  contra função existente nos módulos — nenhuma referência quebrada.
-- Verificação de cobertura total: 100% das linhas de código não-vazias
-  do `script.js` original presentes exatamente uma vez na soma dos 35
-  módulos.
-- Teste real de carregamento via jsdom (navegador headless): zero erros
-  de execução, 52 funções críticas presentes em `window`.
-- Teste real de interação: navegação completa entre os 4 marketplaces
-  + validação numérica de `round2`, `csvN` e `amzN` contra o
-  comportamento esperado.
+- CSS e scripts reorganizados em módulos.
+- Index principal montado com ordem correta de carregamento.
+- Validação inicial do fluxo realizada.
 
 ## Fase 3 — Integração incremental do pipeline Amazon
 
-- Iniciar a integração do novo pipeline Amazon ao fluxo principal da
-  aplicação sem quebrar o comportamento existente.
-- Substituir gradualmente o parser legado pelo fluxo baseado em
-  `amazonFileImportService`, mantendo o parser antigo como fallback
-  até a validação completa da integração.
-- Detectar automaticamente o tipo do arquivo (Transaction Report ou
-  Settlement) e direcionar cada arquivo para o parser adequado.
-- Alimentar `amazonIndexService` de forma incremental e preservar a
-  compatibilidade com dashboards, agregações e exportações já
-  existentes.
-- Executar validação após cada etapa pequena para reduzir risco de
-  regressão e confirmar que o fluxo principal continua funcionando.
+### Objetivo
+Integrar o novo pipeline Amazon ao fluxo principal da aplicação sem quebrar o comportamento existente.
 
-## Próximos passos (fora do escopo desta refatoração)
+### O que já está implementado
+- Detecção do tipo de arquivo no front.
+- Uso preferencial do pipeline novo com fallback para o parser legado.
+- Deduplicação por hash para Settlement.
+- Validação isolada do serviço de índices.
+- Identificação de versão/build/data no front.
 
-Ver `TODO.md` para melhorias *opcionais* que podem ser avaliadas depois
-que este projeto modular for validado em produção pelo usuário. Nenhuma
-delas foi implementada — a prioridade desta migração foi 100%
-preservação de comportamento.
+### Próximo bloco de trabalho
+- Integrar o Transaction Report ao fluxo principal.
+- Preservar o parser legado como fallback até a validação completa.
+- Garantir compatibilidade com Settlement, ERP e dashboards previstos.
+- Validar o fluxo com arquivos reais em navegador.
+
+## Pontos de atenção para a continuidade
+- Não remover o parser legado de forma prematura.
+- Validar cada incremento com arquivos reais antes de avançar.
+- Manter a documentação atualizada ao concluir cada etapa.
+
+## Próximos passos fora do escopo de refatoração
+As melhorias opcionais continuam em TODO.md. Elas não devem ser priorizadas antes da estabilização do fluxo Amazon atual.
