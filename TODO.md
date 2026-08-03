@@ -62,6 +62,24 @@ seu próprio risco/benefício.
       experiência do usuário em casos de erro, então deve ser tratado
       como melhoria de produto, não de arquitetura.
 
+## Backlog técnico — Amazon / validação / Fase 3
+
+- [ ] Reduzir o JSON de validação do fluxo Amazon, removendo o array
+      completo `rows` dos arquivos ignorados por hash e expondo apenas
+      um resumo com arquivo original, arquivo ignorado, hash e
+      quantidade de linhas.
+- [ ] Melhorar a apresentação do `validate_amazon_index.html`, deixando
+      os relatórios mais compactos, legíveis e fáceis de comparar entre
+      execuções.
+- [ ] Adicionar opção para exportar o relatório de validação em formato
+      simples (por exemplo: JSON ou texto).
+- [ ] Revisar a interface do harness de validação para facilitar testes
+      futuros e reduzir o esforço de manutenção.
+- [ ] Planejar uma integração incremental do novo pipeline Amazon ao
+      fluxo principal, mantendo compatibilidade com dashboards,
+      agregações e exportações atuais enquanto o parser legado continua
+      disponível como fallback.
+
 ## Fora de escopo permanente (mencionado apenas para registro)
 
 - Reescrever em um framework (React/Vue/etc.) — mudaria completamente a

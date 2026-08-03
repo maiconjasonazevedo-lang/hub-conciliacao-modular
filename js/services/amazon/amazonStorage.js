@@ -29,6 +29,37 @@ function amzFmtSigned(v) {
   const abs = Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
   return (v < 0 ? '-' : '') + 'R$ ' + abs;
 }
+function buildAmzContentHash(text) {
+  const input = String(text || '');
+  let hash = 0x811c9dc5;
+  for (let i = 0; i < input.length; i++) {
+    hash ^= input.charCodeAt(i);
+    hash = Math.imul(hash, 0x01000193);
+  }
+  return (hash >>> 0).toString(16).padStart(8, '0');
+}
+
+function renderAmzDedupSummary(items) {
+  const container = document.getElementById('amz-dedup-summary');
+  if (!container) return;
+  if (!Array.isArray(items) || !items.length) {
+    container.style.display = 'none';
+    container.innerHTML = '';
+    return;
+  }
+  const rows = items.map(item => {
+    const label = item.status === 'ignored'
+      ? `⚠️ Ignorado por duplicidade: ${item.fileName}`
+      : `✅ Processado: ${item.fileName}`;
+    const detail = item.status === 'ignored'
+      ? `original: ${item.originalName || '—'} · hash: ${item.fileHash || '—'}`
+      : `hash: ${item.fileHash || '—'}`;
+    return `<div><strong>${label}</strong><br><span>${detail}</span></div>`;
+  }).join('');
+  container.innerHTML = rows;
+  container.style.display = 'block';
+}
+
 function amzSt(m, c='') {
   const e = document.getElementById('amz-proc-st');
   e.textContent = m; e.className = 'pst ' + c;
@@ -50,7 +81,9 @@ function loadAmzFiles(evt) {
   files.forEach(file => {
     const reader = new FileReader();
     reader.onload = e => {
-      amzRawFiles.push({ name: file.name, text: e.target.result });
+      const text = e.target.result;
+      const fileHash = buildAmzContentHash(text);
+      amzRawFiles.push({ name: file.name, text, hash: fileHash });
       loaded++;
       if (loaded === files.length) {
         document.getElementById('uc-amz-settlement').classList.add('done');
@@ -58,6 +91,7 @@ function loadAmzFiles(evt) {
         document.getElementById('cnt-amz-settlement').textContent = files.length > 1 ? files.length + ' arquivos' : '';
         document.getElementById('amz-proc-btn').disabled = false;
         amzSt('✓ ' + loaded + ' arquivo(s) prontos.', 'ok');
+        renderAmzDedupSummary([]);
       }
     };
     reader.readAsText(file, 'utf-8');

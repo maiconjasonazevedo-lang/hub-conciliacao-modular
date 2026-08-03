@@ -59,6 +59,21 @@ para a arquitetura modular. Todas as etapas abaixo foram concluídas.
   + validação numérica de `round2`, `csvN` e `amzN` contra o
   comportamento esperado.
 
+## Fase 3 — Integração incremental do pipeline Amazon
+
+- Iniciar a integração do novo pipeline Amazon ao fluxo principal da
+  aplicação sem quebrar o comportamento existente.
+- Substituir gradualmente o parser legado pelo fluxo baseado em
+  `amazonFileImportService`, mantendo o parser antigo como fallback
+  até a validação completa da integração.
+- Detectar automaticamente o tipo do arquivo (Transaction Report ou
+  Settlement) e direcionar cada arquivo para o parser adequado.
+- Alimentar `amazonIndexService` de forma incremental e preservar a
+  compatibilidade com dashboards, agregações e exportações já
+  existentes.
+- Executar validação após cada etapa pequena para reduzir risco de
+  regressão e confirmar que o fluxo principal continua funcionando.
+
 ## Próximos passos (fora do escopo desta refatoração)
 
 Ver `TODO.md` para melhorias *opcionais* que podem ser avaliadas depois

@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Validate Amazon Index (Isolated)</title>
+  <style>body{font-family:Arial,Helvetica,sans-serif;padding:12px}textarea{width:48%;height:160px} .row{display:flex;gap:8px;margin-bottom:8px}</style>
+</head>
+<body>
+  <h2>Validação isolada de índices Amazon</h2>
+  <p>Carregue os arquivos Transaction Report e Settlement (um ou mais). Este teste não altera o fluxo da aplicação.</p>
+
+  <div class="row">
+    <div>
+      <label>Transaction Report (arquivo):</label><br>
+      <input id="txFile" type="file" accept="text/*,.csv,.tsv" />
+    </div>
+    <div>
+      <label>Settlement (um ou mais arquivos):</label><br>
+      <input id="settFile" type="file" accept="text/*,.txt,.tsv,.csv" multiple />
+    </div>
+  </div>
+
+  <div class="row">
+    <button id="runBtn">Executar validação</button>
+    <button id="clearBtn">Limpar</button>
+  </div>
+
+  <pre id="output" style="white-space:pre-wrap;border:1px solid #ddd;padding:8px;min-height:160px"></pre>
+
+  <script src="js/services/amazon/amazonTransactionParsers.js"></script>
+  <script src="js/services/amazon/amazonSettlementParsers.js"></script>
+  <script src="js/services/amazon/amazonIndexService.js"></script>
+  <script>
+    const out = document.getElementById('output')
+    function log(...args){ out.textContent += args.join(' ') + '\n' }
+    function readFileInput(el){
+      const f = el.files && el.files[0]
+      return new Promise((res, rej)=>{
+        if (!f) return res(null)
+        const r = new FileReader()
+        r.onload = e => res({ fileName: f.name, text: String(e.target.result) })
+        r.onerror = e => rej(e)
+        r.readAsText(f, 'utf-8')
+      })
+    }
+
+    function readMultipleFiles(el){
+      const files = Array.from(el.files || [])
+      async function computeHash(text) {
+        if (!window.crypto || !crypto.subtle) return null
+        const enc = new TextEncoder()
+        const data = enc.encode(text)
+        const hashBuffer = await crypto.subtle.digest('SHA-1', data)
+        const hashArray = Array.from(new Uint8Array(hashBuffer))
+        return hashArray.map(b => b.toString(16).padStart(2,'0')).join('')
+      }
+      return Promise.all(files.map(f => new Promise((res, rej)=>{
+        const r = new FileReader()
+        r.onload = async e => {
+          const txt = String(e.target.result)
+          try {
+            const h = await computeHash(txt)
+            res({ fileName: f.name, text: txt, fileHash: h })
+          } catch (err) { res({ fileName: f.name, text: txt, fileHash: null }) }
+        }
+        r.onerror = e => rej(e)
+        r.readAsText(f, 'utf-8')
+      })))
+    }
+
+    async function run() {
+      out.textContent = ''
+      if (typeof parseAmazonTransactionReport !== 'function' || typeof parseAmazonSettlement !== 'function' || !window.AmazonIndexService) {
+        log('ERRO: parsers ou AmazonIndexService não encontrados. Verifique os scripts carregados.')
+        return
+      }
+
+      const txFile = await readFileInput(document.getElementById('txFile'))
+      const settFiles = await readMultipleFiles(document.getElementById('settFile'))
+
+      const txSource = txFile ? txFile.text : ''
+
+      let txResult = null
+      try {
+        if (txSource) txResult = parseAmazonTransactionReport(txSource, { fileName: txFile.fileName })
+        else { log('Aviso: nenhum Transaction Report carregado.'); return }
+      } catch (e) { log('Erro ao parsear Transaction Report:', e && e.message); return }
+
+      const allSettRows = []
+      const fileList = []
+      if (Array.isArray(settFiles) && settFiles.length > 0) {
+        for (const f of settFiles) {
+          try {
+            const sRes = parseAmazonSettlement(f.text, { fileName: f.fileName })
+            const rows = (sRes && (sRes.rows || sRes.settlementRows || sRes.data)) || []
+            // collect rows per-file (do not aggregate yet; index service will skip duplicates by hash)
+            fileList.push({ fileName: f.fileName, fileHash: f.fileHash || null, rows: rows })
+          } catch (e) {
+            log('Erro ao parsear Settlement', f.fileName, ':', e && e.message)
+          }
+        }
+      }
+
+      const txEvents = (txResult && (txResult.events || txResult.rawRows || txResult.rows)) || []
+      // pass per-file rows to the index service so it can skip duplicate-content files
+      const settRows = []
+      const res = AmazonIndexService.generateValidationReport(txEvents, settRows, { fileList, log: false })
+
+      const report = res.report
+      const txIndex = res.txIndex || {}
+      const settIndex = res.settIndex || {}
+
+      const ordersTx = Object.keys(txIndex.byOrderId || {})
+      const ordersSett = Object.keys(settIndex.byOrderId || {})
+      const settlementIds = Object.keys(settIndex.bySettlementId || {})
+
+      let ordersMatched = 0
+      for (const oid of ordersTx) if (ordersSett.indexOf(oid) !== -1) ordersMatched++
+
+      const ordersWithoutSettlement = ordersTx.filter(oid => ordersSett.indexOf(oid) === -1)
+
+      const dupTx = (report.duplicateTransactionEventIds || []).length + (report.duplicateTransactionSignatures || []).length
+      const dupSett = (report.duplicateSettlementRowIds || []).length + (report.duplicateSettlementSignatures || []).length
+
+      log('=== AMAZON INDEX VALIDATION ===')
+      log('\nTransaction Events:')
+      log(report.uniqueTransactionEvents)
+
+      log('\nSettlement Files:')
+      log(fileList.length)
+
+      log('\nSettlement Rows (loaded):')
+      log(report.uniqueSettlementRows)
+
+      log('\nSettlement Rows (processed after dedup):')
+      log(report.processedSettlementRowsCount)
+
+      log('\nSettlement IDs:')
+      if (settlementIds.length === 0) log('(nenhum)')
+      else settlementIds.forEach(id => log(id))
+
+      log('\nOrders Transaction:')
+      log(ordersTx.length)
+
+      log('\nOrders Settlement:')
+      log(report.ordersSettlementCount)
+
+      log('\nOrders matched:')
+      log(report.ordersMatchedCount)
+
+      log('\nOrders without settlement:')
+      log(report.ordersWithoutSettlementCount)
+
+      log('\nDuplicate transactions:')
+      log(dupTx)
+
+      log('\nDuplicate settlement rows:')
+      log(dupSett)
+
+      log('\n=== End ===')
+
+      log('\nJSON summary:')
+      log(JSON.stringify({ report, settlementIds, ordersTxCount: ordersTx.length, ordersSettCount: ordersSett.length, ordersMatched, ordersWithoutSettlementSample: ordersWithoutSettlement.slice(0,50) }, null, 2))
+    }
+
+    document.getElementById('runBtn').addEventListener('click', run)
+    document.getElementById('clearBtn').addEventListener('click', ()=> out.textContent='')
+  </script>
+</body>
+</html>

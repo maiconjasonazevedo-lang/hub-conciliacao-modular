@@ -488,6 +488,7 @@
 
     <button class="pbtn2 brand-btn-orange" id="amz-proc-btn" onclick="processAmazon()" disabled>⚡ Processar</button>
     <div class="pst" id="amz-proc-st"></div>
+    <div class="uinfo page-section" id="amz-dedup-summary" style="display:none"></div>
   </div>
 
   <!-- Result screen Amazon -->
@@ -609,6 +610,10 @@
 <script src="js/services/shopee/historyService.js"></script>
 <script src="js/services/meli/historyService.js"></script>
 <script src="js/services/amazon/amazonStorage.js"></script>
+<script src="js/services/amazon/amazonFileImportService.js"></script>
+<script src="js/services/amazon/amazonTransactionParsers.js"></script>
+<script src="js/services/amazon/amazonSettlementParsers.js"></script>
+<script src="js/services/amazon/amazonIndexService.js"></script>
 <script src="js/services/amazon/amazonParsers.js"></script>
 <script src="js/services/amazon/amazonService.js"></script>
 <script src="js/components/amazon/AmazonDashboard.js"></script>
