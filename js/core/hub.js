@@ -27,9 +27,21 @@ function selectMarketplace(mp) {
   }
 }
 
+function renderAppVersion() {
+  const version = window.APP_VERSION || {};
+  const el = document.getElementById('hub-version');
+  if (!el) return;
+  const text = `${version.label || 'Hub Conciliação Modular'} · v${version.version || '—'} · build ${version.build || '—'} · ${version.buildDate || '—'}`;
+  el.textContent = text;
+}
+
 function goToHub() {
   ['shopee-app','meli-app','amazon-app','shopee-entry-screen','meli-entry-screen','shopee-home','shopee-nf-app']
     .forEach(id => document.getElementById(id).style.display = 'none');
   document.getElementById('hub-screen').style.display = 'flex';
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+  renderAppVersion();
+});
 

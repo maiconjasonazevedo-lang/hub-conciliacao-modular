@@ -81,6 +81,15 @@ select.fi{cursor:pointer;min-width:145px}
   background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:16px;
   padding:14px 22px;max-width:480px;z-index:1;backdrop-filter:blur(12px);
 }
+.hub-version{
+  margin-top:12px;
+  font-family:var(--fm);
+  font-size:11px;
+  color:rgba(255,255,255,.72);
+  text-align:center;
+  z-index:1;
+  letter-spacing:.2px;
+}
 /* Hub user panel (user name + logout) spacing and alignment */
 .hub-user-panel{
   margin-top:22px;
