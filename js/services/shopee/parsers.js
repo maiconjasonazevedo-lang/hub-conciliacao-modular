@@ -25,10 +25,34 @@ function parseSvcFee(wb) {
   if (!rows) return {};
   const hIdx = findHdrRow(rows, ['ID do pedido','Taxa de Transação']);
   if (hIdx < 0) return {};
+  const rendaRows = wb2arr(wb, 'Renda');
+  const rendaHdrIdx = rendaRows
+    ? findHdrRow(rendaRows, ['ID do pedido','Taxa de comissão bruta','Taxa de serviço bruta'])
+    : -1;
+  const rendaMap = {};
+  if (rendaHdrIdx >= 0) {
+    rows2objs(rendaRows, rendaHdrIdx).forEach(r => {
+      const id = normalizeId(r['ID do pedido']);
+      if (id && !rendaMap[id]) {
+        rendaMap[id] = { taxaServicoBruta: n(r['Taxa de serviço bruta']) };
+      }
+    });
+  }
   const map = {};
   rows2objs(rows, hIdx).forEach(r => {
     const id = normalizeId(r['ID do pedido']);
-    if (id) map[id] = { taxaTrans: n(r['Taxa de Transação']), taxaItem: n(r['Taxa por item vendido']), taxaR4: n(r['Taxa de R$4 por item']) };
+    if (id) {
+      const taxaTrans = n(r['Taxa de Transação']);
+      const renda = rendaMap[id];
+      map[id] = {
+        taxaTrans,
+        taxaItem: n(r['Taxa por item vendido']),
+        taxaR4: n(r['Taxa de R$4 por item']),
+        taxaItemDcc: renda
+          ? round2(Math.abs(renda.taxaServicoBruta) - Math.abs(taxaTrans))
+          : null,
+      };
+    }
   });
   return map;
 }

@@ -156,9 +156,10 @@ function processFiles() {
           provaRealDCC:    hasFinancial ? pix : null,
           tipo, produto: produto.substring(0,70),
           nf, cb, sb, cl, sl, txTrans, txItem, txR4, txAfil, ajAC, freteShop, freteParceiroLog, pix,
+          taxaItemDcc: svc.taxaItemDcc ?? null,
           voucher, coinCashback, cupomShopeeInc,
           // qtdItens: do income não temos direto, do ord temos
-          qtdItens: (ord ? (ord.qtdItens || 1) : 1),
+          qtdItens: (ord?.qtdItens || n(any?.qtd) || 1),
           moedasShopee: (ord ? (ord.moedasShopee || 0) : 0),
           cupomShopee: cupomShopeeInc || (ord ? (ord.cupomShopee || 0) : 0),
           desconto: voucher + coinCashback,

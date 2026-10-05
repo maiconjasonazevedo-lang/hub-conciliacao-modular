@@ -78,22 +78,16 @@ function downloadCSV(){
     // Prova Real DCC = ValorSis + FreteDesconto - Tarifa - ValorPedido
     const provaRealDCC = h ? round2(valorSis + freteDesc - tarifa - fn2(t.valor)) : 0;
 
-    // ProvaReal = (ValorMercadoria - Desconto) * taxa_total_do_pedido
-    // taxa_total = (comissão bruta + taxa de transação) / ValorMercadoria
-    const provaReal = (() => {
-      const base = round2((valMerc || 0) - (desconto || 0));
-      if (base <= 0 || !valMerc) return 0;
-      const taxaTotal = valMerc > 0 ? (fn2(t.cb) + fn2(t.txTrans)) / valMerc : 0;
-      return round2(base * taxaTotal);
-    })();
+    // ProvaReal = comissão bruta efetiva + taxa de transação
+    const provaReal = h ? round2(Math.abs(fn2(t.cb)) + Math.abs(fn2(t.txTrans))) : 0;
 
-    // Diferença = ProvaReal - (Tarifa - (taxaItem * qtdItens))
     const _qtd = h ? (fn2(t.qtdItens) || 1) : 1;
     const _taxaItem = h ? Math.abs(fn2(t.txItem)) : 0;
-    const diferenca = h ? round2(provaReal - (tarifa - (_taxaItem * _qtd))) : 0;
 
-    // TaxaPorItem = taxa por item * qtdItens (conferência)
-    const linhas = h ? round2(_taxaItem * _qtd) : 0;
+    // TaxaPorItem = total de taxas do pedido dividido pela quantidade
+    const linhas = h ? round2(fn2(t.taxaItemDcc ?? _taxaItem * _qtd) / _qtd) : 0;
+    // Diferença = ProvaReal - (Tarifa - (TaxaPorItem * QtdItens))
+    const diferenca = h ? round2(provaReal - (tarifa - (linhas * _qtd))) : 0;
 
     // QtdItens = quantidade de itens (orders)
     const qtdItens = h ? (fn2(t.qtdItens) || 1) : 1;

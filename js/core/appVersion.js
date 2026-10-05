@@ -1,10 +1,10 @@
 (function(){
   const APP_VERSION = {
-    version: '3.1.1',
-    build: '565b1e2',
+    version: '3.1.2',
+    build: '97e13ff',
     buildDate: '2026-10-05',
     label: 'Hub Conciliação Modular',
-    commitMessage: 'fix: remove apostrophes from Shopee DCC export'
+    commitMessage: 'fix: reconcile Shopee DCC fees and item quantity'
   };
 
   if (typeof window !== 'undefined') {
