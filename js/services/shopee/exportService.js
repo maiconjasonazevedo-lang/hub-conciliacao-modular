@@ -35,7 +35,7 @@ function downloadCSV(){
     if (!t.isOrder) {
       // Saques, ADS e outros sem pedido → #N/DISP nas colunas financeiras
       csvRows.push([
-        "'"+dataFmt, t.pagamento, csvN(t.valor), t.pedido||'-', t.status, csvN(t.saldo), '0',
+        dataFmt, t.pagamento, csvN(t.valor), t.pedido||'-', t.status, csvN(t.saldo), '0',
         '#N/DISP','#N/DISP','#N/DISP','#N/DISP','#N/DISP','#N/DISP','#N/DISP','#N/DISP','#N/DISP',
         '','#N/DISP','#N/DISP','#N/DISP','#N/DISP'
       ].join(';'));
@@ -108,7 +108,7 @@ function downloadCSV(){
     const moedasShopee = h ? fn2(t.moedasShopee || 0) : 0;
 
     csvRows.push([
-      "'"+dataFmt,        // Data
+      dataFmt,            // Data
       t.pagamento,        // Pagamento
       csvN(t.valor),      // Valor pedido
       t.pedido,           // Pedido
@@ -126,7 +126,7 @@ function downloadCSV(){
       csvN(diferenca),    // Diferença
       linhas,             // TaxaPorItem
       qtdItens,           // QtdItens
-      nf ? "'"+nf : '',   // NF
+      nf,                 // NF
       csvN(cupomShopee),  // Cupom Shopee
       csvN(moedasShopee), // Moedas Shopee
     ].join(';'));
@@ -135,6 +135,12 @@ function downloadCSV(){
   // Converter csvRows em worksheet SheetJS e exportar como .ods
   const wsData = csvRows.map(row => row.split(';'));
   const ws = XLSX.utils.aoa_to_sheet(wsData);
+  [0, 18].forEach(col => {
+    for (let row = 1; row < wsData.length; row++) {
+      const address = XLSX.utils.encode_cell({ r: row, c: col });
+      if (ws[address]) ws[address].t = 's';
+    }
+  });
   const wb = XLSX.utils.book_new();
   XLSX.utils.book_append_sheet(wb, ws, 'Conciliação');
   const today = new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
