@@ -1,10 +1,10 @@
 (function(){
   const APP_VERSION = {
-    version: '3.1.2',
-    build: '97e13ff',
-    buildDate: '2026-10-05',
+    version: '3.1.3',
+    build: 'b66bc41',
+    buildDate: '2026-10-06',
     label: 'Hub Conciliação Modular',
-    commitMessage: 'fix: reconcile Shopee DCC fees and item quantity'
+    commitMessage: 'chore: configure GitHub Pages deployment'
   };
 
   if (typeof window !== 'undefined') {
