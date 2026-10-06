@@ -42,7 +42,7 @@ function parseSvcFee(wb) {
   rows2objs(rows, hIdx).forEach(r => {
     const id = normalizeId(r['ID do pedido']);
     if (id) {
-      const taxaTrans = n(r['Taxa de Transação']);
+      const taxaTrans = n(r['Taxa de transação']) || n(r['Taxa de Transação']);
       const renda = rendaMap[id];
       map[id] = {
         taxaTrans,

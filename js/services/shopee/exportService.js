@@ -84,7 +84,6 @@ function downloadCSV(){
     const _qtd = h ? (fn2(t.qtdItens) || 1) : 1;
     const _taxaItem = h ? Math.abs(fn2(t.txItem)) : 0;
 
-    // TaxaPorItem = total de taxas do pedido dividido pela quantidade
     const linhas = h ? round2(fn2(t.taxaItemDcc ?? _taxaItem * _qtd) / _qtd) : 0;
     // Diferença = ProvaReal - (Tarifa - (TaxaPorItem * QtdItens))
     const diferenca = h ? round2(provaReal - (tarifa - (linhas * _qtd))) : 0;
