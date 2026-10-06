@@ -5,14 +5,15 @@ Este checkpoint registra o estado atual do projeto após a estabilização do fl
 
 ## Estado real do repositório
 - Branch: main
-- Último commit: e7c6bd3
-- Versão exibida no front: 3.1.3
-- Build atual: b66bc41
+- Commit da correção incluída: 3d252f0
+- Versão exibida no front: 3.1.4
+- Build atual: b3d252f0
 - Deploy público: GitHub Pages habilitado
 - Documentação atualizada: DOCUMENTACAO_CHECKPOINT.md, README.md e CHANGELOG.md
 
 ## Atualizações recentes concluídas
 - Ajuste no cálculo e reconciliamento de taxas DCC da Shopee.
+- Correção da taxa por item considerando os dois cabeçalhos de taxa de transação.
 - Correção de quantidade de itens e filtro do fluxo de saque Shopee.
 - Remoção de apostrofos em exportações do DCC da Shopee.
 - Configuração do workflow de publicação em GitHub Pages.

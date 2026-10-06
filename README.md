@@ -46,10 +46,10 @@ Ver `ARCHITECTURE.md`.
 
 ## Estado atual do projeto
 
-- Versão atual no front: `3.1.3`
-- Build atual: `b66bc41`
+- Versão atual no front: `3.1.4`
+- Build atual: `b3d252f0`
 - Deploy: GitHub Pages ativo
-- Atualização recente principal: ajustes de saque, DCC e quantidade de itens da Shopee
+- Atualização recente principal: correção da taxa por item e ajustes de saque Shopee
 
 ## Deploy e publicação
 

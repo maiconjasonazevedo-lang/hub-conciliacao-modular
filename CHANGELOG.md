@@ -1,6 +1,11 @@
 # Changelog
 
-## [2026-10-06] — Ajustes de saque Shopee e deploy no Pages
+## [3.1.4] — build b3d252f0 — 2026-10-06 — Correção da taxa por item Shopee
+
+- Corrigida a leitura das colunas alternativas de taxa de transação.
+- A taxa por item exportada considera a taxa de serviço bruta menos a taxa de transação, dividida pela quantidade.
+
+## [3.1.3] — 2026-10-06 — Ajustes de saque Shopee e deploy no Pages
 
 - Ajustes no fluxo do saque da Shopee.
 - Reconciliamento de valores DCC e quantidade de itens.
