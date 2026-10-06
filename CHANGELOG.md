@@ -1,10 +1,19 @@
-# Changelog — Refatoração Arquitetural
+# Changelog
+
+## [2026-10-06] — Ajustes de saque Shopee e deploy no Pages
+
+- Ajustes no fluxo do saque da Shopee.
+- Reconciliamento de valores DCC e quantidade de itens.
+- Correção de exportação com apostrofos em campos da Shopee.
+- Atualização do metadado de versão/build exibido no app.
+- Configuração do GitHub Pages para publicação do projeto estático.
+- Documentação atualizada para refletir o estado atual em produção.
+
+## [Estrutural] Divisão do monólito em 35 arquivos JS + 5 arquivos CSS
 
 Todas as mudanças abaixo são **estruturais** (organização de arquivos e
 comentários de documentação). Nenhuma mudança de comportamento, cálculo,
 regra de negócio ou nome de função/variável foi feita.
-
-## [Estrutural] Divisão do monólito em 35 arquivos JS + 5 arquivos CSS
 
 **Antes:** `hub_conciliacao_marketplaces_V21.html` — 1 arquivo, 4.215
 linhas, CSS e JS inline.

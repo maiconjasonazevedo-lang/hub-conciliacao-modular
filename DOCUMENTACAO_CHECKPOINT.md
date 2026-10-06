@@ -1,63 +1,79 @@
 # Checkpoint da versão atual
 
 ## Visão geral
-Este checkpoint registra o estado do projeto após a consolidação da refatoração modular e da primeira etapa da integração do pipeline Amazon no fluxo principal. O foco atual é continuar a evolução sem quebrar o comportamento já validado.
+Este checkpoint registra o estado atual do projeto após a estabilização do fluxo principal e as correções recentes no módulo Shopee, além da publicação em GitHub Pages.
 
 ## Estado real do repositório
 - Branch: main
-- Último commit: 163a70c
-- Versão exibida no front: 3.1.0
-- Arquivos de documentação recém-atualizados: CONTEXTO_PROJETO.md, DOCUMENTACAO_CHECKPOINT.md, ROADMAP.md e TODO.md
+- Último commit: e7c6bd3
+- Versão exibida no front: 3.1.3
+- Build atual: b66bc41
+- Deploy público: GitHub Pages habilitado
+- Documentação atualizada: DOCUMENTACAO_CHECKPOINT.md, README.md e CHANGELOG.md
+
+## Atualizações recentes concluídas
+- Ajuste no cálculo e reconciliamento de taxas DCC da Shopee.
+- Correção de quantidade de itens e filtro do fluxo de saque Shopee.
+- Remoção de apostrofos em exportações do DCC da Shopee.
+- Configuração do workflow de publicação em GitHub Pages.
+- Sincronização do metadado da versão exibida no app com o deploy atual.
 
 ## Arquitetura atual
 - Front principal em index.html.
-- Organização por módulos em js/core, js/components, js/services e js/managers.
-- Separação por marketplace e por responsabilidade (storage, parser, service, dashboard, exportação).
+- Organização por módulos em js/core, js/components, js/services, js/managers e assets/css.
+- Separação por marketplace e responsabilidade: storage, parser, service, dashboard, exportação e navegação.
 - Versionamento centralizado em js/core/appVersion.js.
+- Deploy estático via GitHub Pages a partir da branch main.
 
 ## Módulos principais
-- js/core/hub.js: navegação principal do hub.
-- js/services/amazon/amazonStorage.js: estado, upload e hash de conteúdo.
-- js/services/amazon/amazonService.js: fluxo principal de processamento do Amazon.
-- js/services/amazon/amazonParsers.js: parser legado do Settlement.
-- js/services/amazon/amazonSettlementParsers.js: parser novo de Settlement.
-- js/services/amazon/amazonTransactionParsers.js: parser novo de Transaction Report.
-- js/services/amazon/amazonFileImportService.js: detecção de tipo e validação inicial.
-- js/services/amazon/amazonIndexService.js: indexação, deduplicação por hash e validação.
+- js/core/hub.js: navegação principal e renderização da versão no hub.
+- js/core/appVersion.js: versão, build e data exibidos no front.
+- js/services/shopee/parsers.js: parsing dos relatórios e dados de pedido/quantidade.
+- js/services/shopee/processFiles.js: consolidação dos dados de renda, pedidos e itens.
+- js/services/shopee/exportService.js: exportação e formatos da ferramenta Shopee.
+- js/services/amazon/amazonStorage.js: upload, hash e estado do conteúdo.
+- js/services/amazon/amazonService.js: fluxo principal do Amazon.
+- js/services/amazon/amazonSettlementParsers.js: parser do Settlement.
+- js/services/amazon/amazonTransactionParsers.js: parser do Transaction Report.
+- js/services/meli/meliExportService.js: exportação do Mercado Livre.
+- js/components/shopee/: telas e dashboards do fluxo Shopee.
 - js/components/amazon/: dashboards e telas de resultado do Amazon.
 
-## Fluxo do Amazon
-1. Upload de arquivos no front.
-2. Detecção automática do tipo do arquivo.
-3. Processamento preferencial pelo pipeline novo, com fallback para o parser legado.
-4. Deduplicação por hash de conteúdo para ignorar arquivos repetidos com nomes diferentes.
-5. Geração de dados para dashboard, agregações e fluxo de ERP.
+## Fluxo principal do app
+1. Acessar a aplicação via GitHub Pages ou servidor local.
+2. Logar no hub principal.
+3. Selecionar o marketplace.
+4. Importar arquivos de relatório ou dados de exportação.
+5. Processar, reconciliar e exportar resultados com base em regras de negócio validadas.
 
 ## O que já foi consolidado
-- Integração incremental do novo pipeline Amazon no fluxo principal.
-- Deduplicação por hash aplicada no fluxo real do app para Settlement.
-- Validação isolada do indexamento e da relação entre Transaction Report, Settlement e orders.
-- Exibição discreta de versão/build/data no front.
+- Modularização do app sem quebrar o fluxo principal.
+- Correções específicas no fluxo Shopee para saque, DCC e item quantity.
+- Deploy automatizado para GitHub Pages.
+- Exibição da versão/build/data do app sincronizada com o build atual.
+- Separação dos arquivos locais de teste/exportação do controle de versionamento.
 
 ## O que precisa ser preservado
-- O parser legado não deve ser removido antes da validação completa do novo fluxo.
-- A deduplicação por hash deve permanecer antes da agregação e do indexamento.
-- O fluxo deve continuar a funcionar via servidor local, não como simples abertura local do HTML.
-- A validation UI e os relatórios de validação devem ser tratados como ferramentas de apoio, não como substitutos do teste manual no navegador.
+- Nenhum arquivo de dados real (.xlsx, .csv, exports) deve ser enviado ao Git sem necessidade.
+- O app continua sendo dependente de servidor HTTP ou GitHub Pages; não é recomendável abrir o projeto direto por file://.
+- Qualquer ajuste financeiro ou de itens deve ser validado com o relatório real antes de fechar uma release.
+- A version metadata do front deve acompanhar o build oficial publicado.
 
-## Próximo passo
-- Iniciar a Fase 3.2 com a integração do Transaction Report no fluxo principal, mantendo compatibilidade com Settlement + ERP já validada.
+## Próximo passo sugerido
+- Validar o comportamento do saque da Shopee em produção/Pages com um cenário real e registrar o resultado em checklist de QA.
+- Revisar eventualmente a documentação técnica do fluxo Amazon e do fluxo Shopee em paralelo para manter a referência atualizada.
 
 ## Como validar manualmente
-1. Rodar o projeto com um servidor local.
-2. Carregar arquivos Amazon reais no fluxo principal.
-3. Confirmar que o processamento não quebra o dashboard e a lógica ERP.
-4. Comparar comportamento entre o fluxo legado e o novo pipeline quando houver arquivo compatível.
-5. Registrar qualquer divergência antes de avançar para a próxima etapa.
+1. Abrir a URL pública do GitHub Pages.
+2. Fazer login no hub.
+3. Carregar os relatórios relevantes do marketplace.
+4. Conferir a version metadata apresentada no hub.
+5. Validar o cálculo de taxas, quantidades e valores do saque Shopee.
+6. Registrar divergências e ajustar o módulo correspondente.
 
-## Como retomar o desenvolvimento em outra conta/dev
+## Como retomar o desenvolvimento
 1. Clonar o repositório.
 2. Abrir a pasta no VS Code.
-3. Rodar um servidor local e abrir a aplicação em navegador.
-4. Ler este checkpoint junto com CONTEXTO_PROJETO.md e ROADMAP.md.
-5. Priorizar os módulos Amazon em js/services/amazon/ e o ponto de entrada index.html.
+3. Rodar um servidor local ou usar o deploy do GitHub Pages.
+4. Ler este checkpoint junto com README.md, ARCHITECTURE.md e ROADMAP.md.
+5. Priorizar ajustes sobre js/services/shopee/ e js/core/appVersion.js quando a mudança impacta o front e o deploy.

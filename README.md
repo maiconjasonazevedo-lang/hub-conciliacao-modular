@@ -44,10 +44,22 @@ Depois acesse `http://localhost:8000/index.html` no navegador.
 
 Ver `ARCHITECTURE.md`.
 
+## Estado atual do projeto
+
+- Versão atual no front: `3.1.3`
+- Build atual: `b66bc41`
+- Deploy: GitHub Pages ativo
+- Atualização recente principal: ajustes de saque, DCC e quantidade de itens da Shopee
+
+## Deploy e publicação
+
+O projeto está publicado via GitHub Pages a partir da branch `main` e usa um workflow em `.github/workflows/deploy-pages.yml` para publicar o site estático automaticamente.
+
 ## Documentos do projeto
 
 - `ARCHITECTURE.md` — como o sistema está organizado e por quê.
 - `ROADMAP.md` — andamento da migração (todas as etapas concluídas).
-- `CHANGELOG.md` — mudanças estruturais registradas.
+- `CHANGELOG.md` — mudanças estruturadas e release notes.
+- `DOCUMENTACAO_CHECKPOINT.md` — estado atual, versões e validação do app.
 - `KNOWN_LIMITATIONS.md` — limitações conhecidas (leia antes de usar em produção).
 - `TODO.md` — melhorias futuras opcionais (nada aqui foi implementado).
