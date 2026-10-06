@@ -15,6 +15,7 @@
 
 let AMZ_DATA    = null;  // { rows: [], settlements: [] }
 let amzRawFiles = [];
+let amzTxFiles  = [];
 let amzPage     = 1;
 const AMZ_PS    = 50;
 
@@ -76,7 +77,8 @@ function entryNewUploadAmazon() {
 function loadAmzFiles(evt) {
   const files = Array.from(evt.target.files);
   if (!files.length) return;
-  amzRawFiles = [];
+  // Replace previous settlement/raw files (keeps any TX files appended separately)
+  amzRawFiles = amzRawFiles.filter(f => (f._isTx));
   let loaded = 0;
   files.forEach(file => {
     const reader = new FileReader();
@@ -96,6 +98,27 @@ function loadAmzFiles(evt) {
     };
     reader.readAsText(file, 'utf-8');
   });
+  evt.target.value = '';
+}
+
+// Upload específico para Transaction Report (CSV). Não substitui Settlement uploads.
+function loadAmzTxFile(evt) {
+  const file = evt.target.files && evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const text = e.target.result;
+    const fileHash = buildAmzContentHash(text);
+    const entry = { name: file.name, text, hash: fileHash, _isTx: true };
+    // keep separate list for UI, but append to raw files for processing
+    amzTxFiles = [entry];
+    amzRawFiles.push(entry);
+    document.getElementById('uc-amz-tx').classList.add('done');
+    document.getElementById('fn-amz-tx').textContent = '✓ ' + file.name;
+    document.getElementById('amz-proc-btn').disabled = false;
+    amzSt('✓ Transaction Report pronto: ' + file.name, 'ok');
+  };
+  reader.readAsText(file, 'utf-8');
   evt.target.value = '';
 }
 

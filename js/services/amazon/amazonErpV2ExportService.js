@@ -50,6 +50,33 @@ function exportErpV2Excel() {
 
   const ws = XLSX.utils.json_to_sheet(rows);
 
+  const currencyFormat = '"R$"#,##0.00;[Red]"-R$"#,##0.00';
+  const monetaryColumns = ['F','G','H','I','J','K','L','M','N','O','P'];
+  const totalRow = rows.length + 2;
+
+  monetaryColumns.forEach(col => {
+    for (let row = 2; row < totalRow; row++) {
+      const addr = `${col}${row}`;
+      const cell = ws[addr];
+      if (cell && cell.t === 'n') {
+        cell.z = currencyFormat;
+      }
+    }
+  });
+
+  ws[`A${totalRow}`] = { t: 's', v: 'TOTAL' };
+  monetaryColumns.forEach(col => {
+    ws[`${col}${totalRow}`] = {
+      t: 'n',
+      f: `SUM(${col}2:${col}${totalRow - 1})`,
+      z: currencyFormat,
+    };
+  });
+
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  range.e.r = totalRow - 1;
+  ws['!ref'] = XLSX.utils.encode_range(range);
+
   // Larguras de coluna
   ws['!cols'] = [
     {wch:16},{wch:26},{wch:16},{wch:14},{wch:13},

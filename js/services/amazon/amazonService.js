@@ -151,6 +151,19 @@ function processAmazon() {
     if (indexService && typeof indexService.generateValidationReport === 'function') {
       const indexResult = indexService.generateValidationReport(txEvents, allRows, { fileList, log: false });
       window.AMZ_INDEX_REPORT = indexResult.report;
+      // Enriquecer o orderIndex existente com agregados do Transaction Report (não intrusivo)
+      try {
+        if (indexService && typeof indexService.enrichOrderIndexWithTx === 'function') {
+          indexService.enrichOrderIndexWithTx(indexResult.txIndex, indexResult.orderIndex || {});
+          indexResult.txEnriched = true
+        }
+      } catch (e) {
+        console.warn('Failed to enrich orderIndex with tx events:', e && e.message)
+      }
+
+      // Expor índices e eventos para uso incremental no UI e nas próximas etapas
+      window.AMZ_INDEX = indexResult; // { report, txIndex, settIndex, orderIndex }
+      window.AMZ_TX_EVENTS = txEvents.slice();
     }
 
     _showAmazonResult();

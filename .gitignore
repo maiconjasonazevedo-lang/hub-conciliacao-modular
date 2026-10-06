@@ -31,3 +31,13 @@ validate_amazon_parser.js
 
 # local validation artifacts
 temp_validation_raw.txt
+
+# arquivos locais de teste/exportação (não versionar)
+*.xlsx
+*.xls
+*.csv
+result_exportation.xlsx
+Order.all.*.xlsx
+my_balance_transaction_report.shopee.*.xlsx
+Income*.xlsx
+.~lock.*

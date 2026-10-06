@@ -232,10 +232,81 @@
     return { report, txIndex, settIndex, orderIndex }
   }
 
+  function enrichOrderIndexWithTx(txIndex, orderIndex, options) {
+    options = options || {}
+    function toNumber(v) {
+      if (v == null || v === '') return 0
+      if (typeof v === 'number') return isFinite(v) ? v : 0
+      // Accept strings with comma as decimal separator
+      const s = String(v).replace(/\./g,'').replace(/,/g,'.').replace(/[^0-9.\-]/g,'')
+      const n = parseFloat(s)
+      return isNaN(n) ? 0 : n
+    }
+
+    // For each order entry, compute aggregates from transactionEvents and attach a txSummary object.
+    for (const orderId of Object.keys(orderIndex || {})) {
+      const entry = orderIndex[orderId]
+      const txs = entry.transactionEvents || []
+      const summary = {
+        txCount: txs.length,
+        settlementIds: {},
+        amounts: {
+          productSales: 0,
+          shippingCredits: 0,
+          giftWrapCredits: 0,
+          promotionalDiscounts: 0,
+          salesTaxCollected: 0,
+          sellingFees: 0,
+          fbaFees: 0,
+          otherTransactionFees: 0,
+          other: 0,
+          total: 0
+        },
+        statusCounts: {},
+        invalidNumberFields: 0
+      }
+
+      for (const tx of txs) {
+        // collect settlement ids
+        const sid = tx.settlementId || tx.settlement || null
+        if (sid) summary.settlementIds[sid] = true
+
+        // sum known numeric fields when present
+        summary.amounts.productSales += toNumber(tx.productSales || tx.product_sale || tx.product_sales)
+        summary.amounts.shippingCredits += toNumber(tx.shippingCredits || tx.shipping_credit || tx.shipping)
+        summary.amounts.giftWrapCredits += toNumber(tx.giftWrapCredits || tx.gift_wrap)
+        summary.amounts.promotionalDiscounts += toNumber(tx.promotionalDiscounts || tx.promotional_discount || tx.promoDiscount)
+        summary.amounts.salesTaxCollected += toNumber(tx.salesTaxCollected || tx.sales_tax)
+        summary.amounts.sellingFees += toNumber(tx.sellingFees || tx.selling_fee || tx.tarifas)
+        summary.amounts.fbaFees += toNumber(tx.fbaFees || tx.fba_fee)
+        summary.amounts.otherTransactionFees += toNumber(tx.otherTransactionFees || tx.other_fees)
+        summary.amounts.other += toNumber(tx.other || tx.outro)
+        summary.amounts.total += toNumber(tx.total || tx.amount || tx.valor || tx.Total)
+
+        const st = tx.transactionStatus || tx.status || tx['Status da transação'] || 'UNKNOWN'
+        summary.statusCounts[st] = (summary.statusCounts[st] || 0) + 1
+
+        if (Array.isArray(tx.invalidNumberFields)) summary.invalidNumberFields += tx.invalidNumberFields.length
+        else if (tx.invalidNumberFields) summary.invalidNumberFields += 1
+      }
+
+      // convert settlementIds map to array
+      entry.txSummary = entry.txSummary || {}
+      entry.txSummary.txCount = summary.txCount
+      entry.txSummary.settlementIds = Object.keys(summary.settlementIds)
+      entry.txSummary.amounts = summary.amounts
+      entry.txSummary.statusCounts = summary.statusCounts
+      entry.txSummary.invalidNumberFields = summary.invalidNumberFields
+    }
+
+    return orderIndex
+  }
+
   const AmazonIndexService = {
     buildTransactionIndex,
     buildSettlementIndex,
     buildOrderIndex,
+    enrichOrderIndexWithTx,
     groupFilesByHash,
     detectFileDuplicates,
     generateValidationReport

@@ -469,6 +469,16 @@
         <input type="file" accept=".txt,.tsv" multiple onchange="loadAmzFiles(event)">
       </label>
 
+      <!-- Transaction Report -->
+      <label class="uc brand-border-green" id="uc-amz-tx">
+        <span class="uc-badge">✓</span>
+        <span class="uc-icon">📑</span>
+        <div class="uc-title">Transaction Report</div>
+        <div class="uc-desc">Relatório de Transações (Transaction Report)<br><br><em>Arquivo .csv — um por vez</em></div>
+        <div class="uc-file" id="fn-amz-tx">Nenhum arquivo</div>
+        <input type="file" accept=".csv,.txt" onchange="loadAmzTxFile(event)">
+      </label>
+
       <!-- ERP -->
       <label class="uc brand-border-blue" id="uc-amz-erp">
         <span class="uc-badge">✓</span>
